@@ -26,3 +26,8 @@ include = ["dataflow_lean*"]
 
 [tool.setuptools.package-data]
 "dataflow_lean.pipelines" = ["proof.schema.json"]
+
+[tool.pytest.ini_options]
+# Keep the root suite to DataFlow-Lean's own tests. The vendored LeanFlow tree
+# under leanflow/ has its own suite and dependencies (see leanflow/README.md).
+testpaths = ["tests"]

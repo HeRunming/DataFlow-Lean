@@ -1,0 +1,31 @@
+{
+ "source": "Roman Vershynin, High-Dimensional Probability (2nd ed.)",
+ "snapshot_utc": "2026-10-12T09:00:00Z",
+ "lean_toolchain": "leanprover/lean4:v4.28.0",
+ "mathlib": "v4.28.0",
+ "campaign_batches": 1035,
+ "campaign_status": {
+  "proofs_completed": 85,
+  "statements_completed": 372,
+  "statement_retry": 355,
+  "skipped": 91,
+  "proof_retry": 32,
+  "pending": 95,
+  "blocked_unresolved_dependency": 5
+ },
+ "modules_in_snapshot": 394,
+ "modules_by_classification": {
+  "proved": 228,
+  "statement_with_sorry": 166
+ },
+ "proved_campaign_items": 85,
+ "audited_theorems": 111,
+ "axiom_audit": {
+  "standard_axioms_only": 110,
+  "no_axioms": 1,
+  "non_standard": 0,
+  "sorryAx": 0,
+  "errors": 0
+ },
+ "standalone_build": "lake build: 8420 jobs, success"
+}

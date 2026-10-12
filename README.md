@@ -142,6 +142,15 @@ The earlier three-shot whole-proof baseline remains available as
 10-task smoke test scored pass@1 10%, pass@2 50%, pass@3 60%. That is not the
 full M2F algorithm and is not a full FATE-H score.
 
+## High-Dimensional Probability campaign
+
+[`results/hdp/`](results/hdp/README.md) holds Lean 4 formalizations of
+Vershynin's *High-Dimensional Probability*: a standalone Lake project with 85
+kernel-checked proved items and 372 further accepted statements, plus an axiom
+audit and a per-item inventory. They were produced by LeanFlow, which is
+vendored with its HDP campaign harness in [`leanflow/`](leanflow/HDP_CAMPAIGN.md).
+LeanFlow is independent of the `dataflow_lean` package and has its own test suite.
+
 ## Metrics and audit artifacts
 
 Each DataFlow row retains:

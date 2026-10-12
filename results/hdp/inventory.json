@@ -1,0 +1,3674 @@
+[
+ {
+  "module": "FateXWork",
+  "file": "lean/FateXWork.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items001C77E1738",
+  "file": "lean/FateXWork/Environments/Items001C77E1738.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items001C77E1738.Main",
+  "file": "lean/FateXWork/Environments/Items001C77E1738/Main.lean",
+  "batch_ids": [
+   "items-0.0.1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items00234CDA01A.Main",
+  "file": "lean/FateXWork/Environments/Items00234CDA01A/Main.lean",
+  "batch_ids": [
+   "items-0.0.2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items00402F3D5DE.Main",
+  "file": "lean/FateXWork/Environments/Items00402F3D5DE/Main.lean",
+  "batch_ids": [
+   "items-0.0.4"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items005EAEA573F",
+  "file": "lean/FateXWork/Environments/Items005EAEA573F.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items005EAEA573F.Main",
+  "file": "lean/FateXWork/Environments/Items005EAEA573F/Main.lean",
+  "batch_ids": [
+   "items-0.0.5"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items018353C612.Main",
+  "file": "lean/FateXWork/Environments/Items018353C612/Main.lean",
+  "batch_ids": [
+   "items-0.1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items0438222EE4.Main",
+  "file": "lean/FateXWork/Environments/Items0438222EE4/Main.lean",
+  "batch_ids": [
+   "items-0.4"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items05784E1F74",
+  "file": "lean/FateXWork/Environments/Items05784E1F74.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items05784E1F74.Main",
+  "file": "lean/FateXWork/Environments/Items05784E1F74/Main.lean",
+  "batch_ids": [
+   "items-0.5"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items08D2DB1FAD.Main",
+  "file": "lean/FateXWork/Environments/Items08D2DB1FAD/Main.lean",
+  "batch_ids": [
+   "items-0.8"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items09D98428BA",
+  "file": "lean/FateXWork/Environments/Items09D98428BA.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items09D98428BA.Main",
+  "file": "lean/FateXWork/Environments/Items09D98428BA/Main.lean",
+  "batch_ids": [
+   "items-0.9"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items111B8A9C24F",
+  "file": "lean/FateXWork/Environments/Items111B8A9C24F.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items111B8A9C24F.Main",
+  "file": "lean/FateXWork/Environments/Items111B8A9C24F/Main.lean",
+  "batch_ids": [
+   "items-1.11"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items112F78B3F0B.Main",
+  "file": "lean/FateXWork/Environments/Items112F78B3F0B/Main.lean",
+  "batch_ids": [
+   "items-1.12"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items1135D2C7E94",
+  "file": "lean/FateXWork/Environments/Items1135D2C7E94.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items1135D2C7E94.Main",
+  "file": "lean/FateXWork/Environments/Items1135D2C7E94/Main.lean",
+  "batch_ids": [
+   "items-1.13"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 4
+ },
+ {
+  "module": "FateXWork.Environments.Items1143C9DEB84",
+  "file": "lean/FateXWork/Environments/Items1143C9DEB84.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items1143C9DEB84.Main",
+  "file": "lean/FateXWork/Environments/Items1143C9DEB84/Main.lean",
+  "batch_ids": [
+   "items-1.14"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items116DB9FD295.Main",
+  "file": "lean/FateXWork/Environments/Items116DB9FD295/Main.lean",
+  "batch_ids": [
+   "items-1.16"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items11846D1B6FD.Main",
+  "file": "lean/FateXWork/Environments/Items11846D1B6FD/Main.lean",
+  "batch_ids": [
+   "items-1.18"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items1261D0ADA8",
+  "file": "lean/FateXWork/Environments/Items1261D0ADA8.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items1261D0ADA8.Main",
+  "file": "lean/FateXWork/Environments/Items1261D0ADA8/Main.lean",
+  "batch_ids": [
+   "items-1.2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items13E1BE4B26",
+  "file": "lean/FateXWork/Environments/Items13E1BE4B26.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items13E1BE4B26.Main",
+  "file": "lean/FateXWork/Environments/Items13E1BE4B26/Main.lean",
+  "batch_ids": [
+   "items-1.3"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items14110C94FF1.Main",
+  "file": "lean/FateXWork/Environments/Items14110C94FF1/Main.lean",
+  "batch_ids": [
+   "items-1.4.1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items14256494BA4.Main",
+  "file": "lean/FateXWork/Environments/Items14256494BA4/Main.lean",
+  "batch_ids": [
+   "items-1.4.2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items1491E4B429",
+  "file": "lean/FateXWork/Environments/Items1491E4B429.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items1491E4B429.Main",
+  "file": "lean/FateXWork/Environments/Items1491E4B429/Main.lean",
+  "batch_ids": [
+   "items-1.4"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items15077AFA8F",
+  "file": "lean/FateXWork/Environments/Items15077AFA8F.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items15077AFA8F.Main",
+  "file": "lean/FateXWork/Environments/Items15077AFA8F/Main.lean",
+  "batch_ids": [
+   "items-1.5"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items1514B186F65.Main",
+  "file": "lean/FateXWork/Environments/Items1514B186F65/Main.lean",
+  "batch_ids": [
+   "items-1.5.1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items161EA02706F.Main",
+  "file": "lean/FateXWork/Environments/Items161EA02706F/Main.lean",
+  "batch_ids": [
+   "items-1.6.1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items16274243024.Main",
+  "file": "lean/FateXWork/Environments/Items16274243024/Main.lean",
+  "batch_ids": [
+   "items-1.6.2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items16382FFF2F5.Main",
+  "file": "lean/FateXWork/Environments/Items16382FFF2F5/Main.lean",
+  "batch_ids": [
+   "items-1.6.3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items171618017D6.Main",
+  "file": "lean/FateXWork/Environments/Items171618017D6/Main.lean",
+  "batch_ids": [
+   "items-1.7.1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items1728FC83799.Main",
+  "file": "lean/FateXWork/Environments/Items1728FC83799/Main.lean",
+  "batch_ids": [
+   "items-1.7.2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items17372A5D4B0.Main",
+  "file": "lean/FateXWork/Environments/Items17372A5D4B0/Main.lean",
+  "batch_ids": [
+   "items-1.7.3"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items174AF99D1D9.Main",
+  "file": "lean/FateXWork/Environments/Items174AF99D1D9/Main.lean",
+  "batch_ids": [
+   "items-1.7.4"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.Items176FBBD2BA5.Main",
+  "file": "lean/FateXWork/Environments/Items176FBBD2BA5/Main.lean",
+  "batch_ids": [
+   "items-1.7.6"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items177947C3E95",
+  "file": "lean/FateXWork/Environments/Items177947C3E95.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items177947C3E95.Main",
+  "file": "lean/FateXWork/Environments/Items177947C3E95/Main.lean",
+  "batch_ids": [
+   "items-1.7.7"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items179DA09C07A",
+  "file": "lean/FateXWork/Environments/Items179DA09C07A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items179DA09C07A.Main",
+  "file": "lean/FateXWork/Environments/Items179DA09C07A/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items18BCE67B4F.Main",
+  "file": "lean/FateXWork/Environments/Items18BCE67B4F/Main.lean",
+  "batch_ids": [
+   "items-1.8"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items211C25E0102.Main",
+  "file": "lean/FateXWork/Environments/Items211C25E0102/Main.lean",
+  "batch_ids": [
+   "items-2.1.1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items2120EEEF9E5",
+  "file": "lean/FateXWork/Environments/Items2120EEEF9E5.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items2120EEEF9E5.Main",
+  "file": "lean/FateXWork/Environments/Items2120EEEF9E5/Main.lean",
+  "batch_ids": [
+   "items-2.1.2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items21216DA3371.Main",
+  "file": "lean/FateXWork/Environments/Items21216DA3371/Main.lean",
+  "batch_ids": [
+   "items-2.12"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items219F506FF88.Main",
+  "file": "lean/FateXWork/Environments/Items219F506FF88/Main.lean",
+  "batch_ids": [
+   "items-2.19"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items21E76927C1.Main",
+  "file": "lean/FateXWork/Environments/Items21E76927C1/Main.lean",
+  "batch_ids": [
+   "items-2.1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items220933A057F.Main",
+  "file": "lean/FateXWork/Environments/Items220933A057F/Main.lean",
+  "batch_ids": [
+   "items-2.20"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items221AA0FB1D5.Main",
+  "file": "lean/FateXWork/Environments/Items221AA0FB1D5/Main.lean",
+  "batch_ids": [
+   "items-2.2.1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items221CA8D13B2.Main",
+  "file": "lean/FateXWork/Environments/Items221CA8D13B2/Main.lean",
+  "batch_ids": [
+   "items-2.21"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items2226410EACF.Main",
+  "file": "lean/FateXWork/Environments/Items2226410EACF/Main.lean",
+  "batch_ids": [
+   "items-2.22"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items2226BA68EBD",
+  "file": "lean/FateXWork/Environments/Items2226BA68EBD.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items2226BA68EBD.Main",
+  "file": "lean/FateXWork/Environments/Items2226BA68EBD/Main.lean",
+  "batch_ids": [
+   "items-2.2.2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items223936E5E4B",
+  "file": "lean/FateXWork/Environments/Items223936E5E4B.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items223936E5E4B.Main",
+  "file": "lean/FateXWork/Environments/Items223936E5E4B/Main.lean",
+  "batch_ids": [
+   "items-2.2.3"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items2248B9C9F70.Main",
+  "file": "lean/FateXWork/Environments/Items2248B9C9F70/Main.lean",
+  "batch_ids": [
+   "items-2.24"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 5
+ },
+ {
+  "module": "FateXWork.Environments.Items224E0C84F1E.Main",
+  "file": "lean/FateXWork/Environments/Items224E0C84F1E/Main.lean",
+  "batch_ids": [
+   "items-2.2.4"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items2258048F267.Main",
+  "file": "lean/FateXWork/Environments/Items2258048F267/Main.lean",
+  "batch_ids": [
+   "items-2.2.5"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items2262FC968E6",
+  "file": "lean/FateXWork/Environments/Items2262FC968E6.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items2262FC968E6.Main",
+  "file": "lean/FateXWork/Environments/Items2262FC968E6/Main.lean",
+  "batch_ids": [
+   "items-2.2.6"
+  ],
+  "campaign_status": "statement_retry",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items2275B779712.Main",
+  "file": "lean/FateXWork/Environments/Items2275B779712/Main.lean",
+  "batch_ids": [
+   "items-2.27"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.Items22D49173E9",
+  "file": "lean/FateXWork/Environments/Items22D49173E9.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items22D49173E9.Main",
+  "file": "lean/FateXWork/Environments/Items22D49173E9/Main.lean",
+  "batch_ids": [
+   "items-2.2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.Items230E4A1BF91.Main",
+  "file": "lean/FateXWork/Environments/Items230E4A1BF91/Main.lean",
+  "batch_ids": [
+   "items-2.30"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items23126AAC611.Main",
+  "file": "lean/FateXWork/Environments/Items23126AAC611/Main.lean",
+  "batch_ids": [
+   "items-2.3.1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items23190C3E57A.Main",
+  "file": "lean/FateXWork/Environments/Items23190C3E57A/Main.lean",
+  "batch_ids": [
+   "items-2.31"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items2322A2F825.Main",
+  "file": "lean/FateXWork/Environments/Items2322A2F825/Main.lean",
+  "batch_ids": [
+   "items-2.3"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 7
+ },
+ {
+  "module": "FateXWork.Environments.Items232F54D8C82.Main",
+  "file": "lean/FateXWork/Environments/Items232F54D8C82/Main.lean",
+  "batch_ids": [
+   "items-2.32"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items2448AB3069E.Main",
+  "file": "lean/FateXWork/Environments/Items2448AB3069E/Main.lean",
+  "batch_ids": [
+   "items-2.44"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.Items24CDC84B27.Main",
+  "file": "lean/FateXWork/Environments/Items24CDC84B27/Main.lean",
+  "batch_ids": [
+   "items-2.4"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items250ABCDC76.Main",
+  "file": "lean/FateXWork/Environments/Items250ABCDC76/Main.lean",
+  "batch_ids": [
+   "items-2.5"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items251B97C9E1B.Main",
+  "file": "lean/FateXWork/Environments/Items251B97C9E1B/Main.lean",
+  "batch_ids": [
+   "items-2.5.1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items2603A9672A.Main",
+  "file": "lean/FateXWork/Environments/Items2603A9672A/Main.lean",
+  "batch_ids": [
+   "items-2.6"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items271E7DE6A6.Main",
+  "file": "lean/FateXWork/Environments/Items271E7DE6A6/Main.lean",
+  "batch_ids": [
+   "items-2.7"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items2815C9757C7.Main",
+  "file": "lean/FateXWork/Environments/Items2815C9757C7/Main.lean",
+  "batch_ids": [
+   "items-2.8.1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 4
+ },
+ {
+  "module": "FateXWork.Environments.Items282276C609.Main",
+  "file": "lean/FateXWork/Environments/Items282276C609/Main.lean",
+  "batch_ids": [
+   "items-2.8"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items283C2144B61.Main",
+  "file": "lean/FateXWork/Environments/Items283C2144B61/Main.lean",
+  "batch_ids": [
+   "items-2.8.3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items29220F552C.Main",
+  "file": "lean/FateXWork/Environments/Items29220F552C/Main.lean",
+  "batch_ids": [
+   "items-2.9"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items29523901848.Main",
+  "file": "lean/FateXWork/Environments/Items29523901848/Main.lean",
+  "batch_ids": [
+   "items-2.9.5"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items31079552183.Main",
+  "file": "lean/FateXWork/Environments/Items31079552183/Main.lean",
+  "batch_ids": [
+   "items-3.10"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items3118ADA438D.Main",
+  "file": "lean/FateXWork/Environments/Items3118ADA438D/Main.lean",
+  "batch_ids": [
+   "items-3.11"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 4
+ },
+ {
+  "module": "FateXWork.Environments.Items312FFD28B62.Main",
+  "file": "lean/FateXWork/Environments/Items312FFD28B62/Main.lean",
+  "batch_ids": [
+   "items-3.12"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items32039D08715.Main",
+  "file": "lean/FateXWork/Environments/Items32039D08715/Main.lean",
+  "batch_ids": [
+   "items-3.20"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items3210CE2985.Main",
+  "file": "lean/FateXWork/Environments/Items3210CE2985/Main.lean",
+  "batch_ids": [
+   "items-3.2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items32167A982F5.Main",
+  "file": "lean/FateXWork/Environments/Items32167A982F5/Main.lean",
+  "batch_ids": [
+   "items-3.21"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items3227AB7C8E1.Main",
+  "file": "lean/FateXWork/Environments/Items3227AB7C8E1/Main.lean",
+  "batch_ids": [
+   "items-3.2.2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items322992A4E60.Main",
+  "file": "lean/FateXWork/Environments/Items322992A4E60/Main.lean",
+  "batch_ids": [
+   "items-3.22"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items32458B835C7.Main",
+  "file": "lean/FateXWork/Environments/Items32458B835C7/Main.lean",
+  "batch_ids": [
+   "items-3.24"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items325DDD19542.Main",
+  "file": "lean/FateXWork/Environments/Items325DDD19542/Main.lean",
+  "batch_ids": [
+   "items-3.2.5"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items3290E5CEC65.Main",
+  "file": "lean/FateXWork/Environments/Items3290E5CEC65/Main.lean",
+  "batch_ids": [
+   "items-3.29"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items33030C116A3.Main",
+  "file": "lean/FateXWork/Environments/Items33030C116A3/Main.lean",
+  "batch_ids": [
+   "items-3.30"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items3314B7E43017.Main",
+  "file": "lean/FateXWork/Environments/Items3314B7E43017/Main.lean",
+  "batch_ids": [
+   "items-3.3.14"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items331575CCC9B5.Main",
+  "file": "lean/FateXWork/Environments/Items331575CCC9B5/Main.lean",
+  "batch_ids": [
+   "items-3.3.15"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items3319779650A.Main",
+  "file": "lean/FateXWork/Environments/Items3319779650A/Main.lean",
+  "batch_ids": [
+   "items-3.31"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items3319BB169AE.Main",
+  "file": "lean/FateXWork/Environments/Items3319BB169AE/Main.lean",
+  "batch_ids": [
+   "items-3.3.1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items332929A1C35.Main",
+  "file": "lean/FateXWork/Environments/Items332929A1C35/Main.lean",
+  "batch_ids": [
+   "items-3.32"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items332DC9E7A60.Main",
+  "file": "lean/FateXWork/Environments/Items332DC9E7A60/Main.lean",
+  "batch_ids": [
+   "items-3.3.2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items333A7C22FA8.Main",
+  "file": "lean/FateXWork/Environments/Items333A7C22FA8/Main.lean",
+  "batch_ids": [
+   "items-3.3.3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items333CE403782.Main",
+  "file": "lean/FateXWork/Environments/Items333CE403782/Main.lean",
+  "batch_ids": [
+   "items-3.33"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items3404494D92F.Main",
+  "file": "lean/FateXWork/Environments/Items3404494D92F/Main.lean",
+  "batch_ids": [
+   "items-3.40"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items344DBE09184.Main",
+  "file": "lean/FateXWork/Environments/Items344DBE09184/Main.lean",
+  "batch_ids": [
+   "items-3.44"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 4
+ },
+ {
+  "module": "FateXWork.Environments.Items346E673F5D.Main",
+  "file": "lean/FateXWork/Environments/Items346E673F5D/Main.lean",
+  "batch_ids": [
+   "items-3.4"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 4
+ },
+ {
+  "module": "FateXWork.Environments.Items347BACCDFF8.Main",
+  "file": "lean/FateXWork/Environments/Items347BACCDFF8/Main.lean",
+  "batch_ids": [
+   "items-3.47"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items3504F36989D.Main",
+  "file": "lean/FateXWork/Environments/Items3504F36989D/Main.lean",
+  "batch_ids": [
+   "items-3.50"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.Items3510CF7E16",
+  "file": "lean/FateXWork/Environments/Items3510CF7E16.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items3510CF7E16.Main",
+  "file": "lean/FateXWork/Environments/Items3510CF7E16/Main.lean",
+  "batch_ids": [
+   "items-3.5"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items3517D517068.Main",
+  "file": "lean/FateXWork/Environments/Items3517D517068/Main.lean",
+  "batch_ids": [
+   "items-3.51"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items35472D0A318.Main",
+  "file": "lean/FateXWork/Environments/Items35472D0A318/Main.lean",
+  "batch_ids": [
+   "items-3.5.4"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items356917C5CDF.Main",
+  "file": "lean/FateXWork/Environments/Items356917C5CDF/Main.lean",
+  "batch_ids": [
+   "items-3.56"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items36232F5297B.Main",
+  "file": "lean/FateXWork/Environments/Items36232F5297B/Main.lean",
+  "batch_ids": [
+   "items-3.6.2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items364672BFE3A.Main",
+  "file": "lean/FateXWork/Environments/Items364672BFE3A/Main.lean",
+  "batch_ids": [
+   "items-3.6.4"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items365699F2BED.Main",
+  "file": "lean/FateXWork/Environments/Items365699F2BED/Main.lean",
+  "batch_ids": [
+   "items-3.6.5"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items3684DAE4B5",
+  "file": "lean/FateXWork/Environments/Items3684DAE4B5.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items3684DAE4B5.Main",
+  "file": "lean/FateXWork/Environments/Items3684DAE4B5/Main.lean",
+  "batch_ids": [
+   "items-3.6"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items371ED43AAC4.Main",
+  "file": "lean/FateXWork/Environments/Items371ED43AAC4/Main.lean",
+  "batch_ids": [
+   "items-3.7.1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items372F938D943.Main",
+  "file": "lean/FateXWork/Environments/Items372F938D943/Main.lean",
+  "batch_ids": [
+   "items-3.7.2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 4
+ },
+ {
+  "module": "FateXWork.Environments.Items373707165A6.Main",
+  "file": "lean/FateXWork/Environments/Items373707165A6/Main.lean",
+  "batch_ids": [
+   "items-3.7.3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items37471BD252D.Main",
+  "file": "lean/FateXWork/Environments/Items37471BD252D/Main.lean",
+  "batch_ids": [
+   "items-3.7.4"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items37574649935.Main",
+  "file": "lean/FateXWork/Environments/Items37574649935/Main.lean",
+  "batch_ids": [
+   "items-3.7.5"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items38B00C4D34.Main",
+  "file": "lean/FateXWork/Environments/Items38B00C4D34/Main.lean",
+  "batch_ids": [
+   "items-3.8"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.Items39A06A3157.Main",
+  "file": "lean/FateXWork/Environments/Items39A06A3157/Main.lean",
+  "batch_ids": [
+   "items-3.9"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items4115202CFECB",
+  "file": "lean/FateXWork/Environments/Items4115202CFECB.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items4115202CFECB.Main",
+  "file": "lean/FateXWork/Environments/Items4115202CFECB/Main.lean",
+  "batch_ids": [
+   "items-4.1.15"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items411625875953",
+  "file": "lean/FateXWork/Environments/Items411625875953.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items411625875953.Main",
+  "file": "lean/FateXWork/Environments/Items411625875953/Main.lean",
+  "batch_ids": [
+   "items-4.1.16"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items4117C7D9FC1.Main",
+  "file": "lean/FateXWork/Environments/Items4117C7D9FC1/Main.lean",
+  "batch_ids": [
+   "items-4.1.1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items4129E3188C8.Main",
+  "file": "lean/FateXWork/Environments/Items4129E3188C8/Main.lean",
+  "batch_ids": [
+   "items-4.1.2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items413BDE94DB1",
+  "file": "lean/FateXWork/Environments/Items413BDE94DB1.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items413BDE94DB1.Main",
+  "file": "lean/FateXWork/Environments/Items413BDE94DB1/Main.lean",
+  "batch_ids": [
+   "items-4.13"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items413F81866F0.Main",
+  "file": "lean/FateXWork/Environments/Items413F81866F0/Main.lean",
+  "batch_ids": [
+   "items-4.1.3"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items414D6C2804E.Main",
+  "file": "lean/FateXWork/Environments/Items414D6C2804E/Main.lean",
+  "batch_ids": [
+   "items-4.1.4"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items4158B430936",
+  "file": "lean/FateXWork/Environments/Items4158B430936.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items4158B430936.Main",
+  "file": "lean/FateXWork/Environments/Items4158B430936/Main.lean",
+  "batch_ids": [
+   "items-4.15"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.Items416CF48B79B",
+  "file": "lean/FateXWork/Environments/Items416CF48B79B.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items416CF48B79B.Main",
+  "file": "lean/FateXWork/Environments/Items416CF48B79B/Main.lean",
+  "batch_ids": [
+   "items-4.16"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items416EB1FC7DE.Main",
+  "file": "lean/FateXWork/Environments/Items416EB1FC7DE/Main.lean",
+  "batch_ids": [
+   "items-4.1.6"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items418F0256182",
+  "file": "lean/FateXWork/Environments/Items418F0256182.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items418F0256182.Main",
+  "file": "lean/FateXWork/Environments/Items418F0256182/Main.lean",
+  "batch_ids": [
+   "items-4.1.8"
+  ],
+  "campaign_status": "skipped",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items4197718E096",
+  "file": "lean/FateXWork/Environments/Items4197718E096.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items4197718E096.Main",
+  "file": "lean/FateXWork/Environments/Items4197718E096/Main.lean",
+  "batch_ids": [
+   "items-4.1.9"
+  ],
+  "campaign_status": "skipped",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items4215B087D63",
+  "file": "lean/FateXWork/Environments/Items4215B087D63.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items4215B087D63.Main",
+  "file": "lean/FateXWork/Environments/Items4215B087D63/Main.lean",
+  "batch_ids": [
+   "items-4.2.1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items42515191915",
+  "file": "lean/FateXWork/Environments/Items42515191915.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items42515191915.Main",
+  "file": "lean/FateXWork/Environments/Items42515191915/Main.lean",
+  "batch_ids": [
+   "items-4.2.5"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items4257F92D183.Main",
+  "file": "lean/FateXWork/Environments/Items4257F92D183/Main.lean",
+  "batch_ids": [
+   "items-4.25"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items42640965F8B.Main",
+  "file": "lean/FateXWork/Environments/Items42640965F8B/Main.lean",
+  "batch_ids": [
+   "items-4.2.6"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items428E3BEA066.Main",
+  "file": "lean/FateXWork/Environments/Items428E3BEA066/Main.lean",
+  "batch_ids": [
+   "items-4.2.8"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items42975DBDEA",
+  "file": "lean/FateXWork/Environments/Items42975DBDEA.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items42975DBDEA.Main",
+  "file": "lean/FateXWork/Environments/Items42975DBDEA/Main.lean",
+  "batch_ids": [
+   "items-4.2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 5
+ },
+ {
+  "module": "FateXWork.Environments.Items4932ABB4CD.Main",
+  "file": "lean/FateXWork/Environments/Items4932ABB4CD/Main.lean",
+  "batch_ids": [
+   "items-4.9"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.Items514605B1010",
+  "file": "lean/FateXWork/Environments/Items514605B1010.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items514605B1010.Main",
+  "file": "lean/FateXWork/Environments/Items514605B1010/Main.lean",
+  "batch_ids": [
+   "items-5.1.4"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items5179B090FE9",
+  "file": "lean/FateXWork/Environments/Items5179B090FE9.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items5179B090FE9.Main",
+  "file": "lean/FateXWork/Environments/Items5179B090FE9/Main.lean",
+  "batch_ids": [
+   "items-5.1.7"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items5191B3CF6B",
+  "file": "lean/FateXWork/Environments/Items5191B3CF6B.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items5191B3CF6B.Main",
+  "file": "lean/FateXWork/Environments/Items5191B3CF6B/Main.lean",
+  "batch_ids": [
+   "items-5.1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 5
+ },
+ {
+  "module": "FateXWork.Environments.Items52419945955",
+  "file": "lean/FateXWork/Environments/Items52419945955.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items52419945955.Main",
+  "file": "lean/FateXWork/Environments/Items52419945955/Main.lean",
+  "batch_ids": [
+   "items-5.24"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items533D4D1398D",
+  "file": "lean/FateXWork/Environments/Items533D4D1398D.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items533D4D1398D.Main",
+  "file": "lean/FateXWork/Environments/Items533D4D1398D/Main.lean",
+  "batch_ids": [
+   "items-5.3.3"
+  ],
+  "campaign_status": "skipped",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items5385F27D8A",
+  "file": "lean/FateXWork/Environments/Items5385F27D8A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items5385F27D8A.Main",
+  "file": "lean/FateXWork/Environments/Items5385F27D8A/Main.lean",
+  "batch_ids": [
+   "items-5.3"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items5414F0486AAC",
+  "file": "lean/FateXWork/Environments/Items5414F0486AAC.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items5414F0486AAC.Main",
+  "file": "lean/FateXWork/Environments/Items5414F0486AAC/Main.lean",
+  "batch_ids": [
+   "items-5.4.14"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items543F9555759.Main",
+  "file": "lean/FateXWork/Environments/Items543F9555759/Main.lean",
+  "batch_ids": [
+   "items-5.4.3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items615A0DA0F42",
+  "file": "lean/FateXWork/Environments/Items615A0DA0F42.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items615A0DA0F42.Main",
+  "file": "lean/FateXWork/Environments/Items615A0DA0F42/Main.lean",
+  "batch_ids": [
+   "items-6.15"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items69D4367B58",
+  "file": "lean/FateXWork/Environments/Items69D4367B58.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items69D4367B58.Main",
+  "file": "lean/FateXWork/Environments/Items69D4367B58/Main.lean",
+  "batch_ids": [
+   "items-6.9"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items7123E54768E.Main",
+  "file": "lean/FateXWork/Environments/Items7123E54768E/Main.lean",
+  "batch_ids": [
+   "items-7.1.2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items7148D679CBC",
+  "file": "lean/FateXWork/Environments/Items7148D679CBC.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items7148D679CBC.Main",
+  "file": "lean/FateXWork/Environments/Items7148D679CBC/Main.lean",
+  "batch_ids": [
+   "items-7.1.4"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items742ED354B1C",
+  "file": "lean/FateXWork/Environments/Items742ED354B1C.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items742ED354B1C.Main",
+  "file": "lean/FateXWork/Environments/Items742ED354B1C/Main.lean",
+  "batch_ids": [
+   "items-7.4.2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items83116F83D9D0",
+  "file": "lean/FateXWork/Environments/Items83116F83D9D0.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items83116F83D9D0.Main",
+  "file": "lean/FateXWork/Environments/Items83116F83D9D0/Main.lean",
+  "batch_ids": [
+   "items-8.3.11"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Items831209CDFAB3",
+  "file": "lean/FateXWork/Environments/Items831209CDFAB3.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items831209CDFAB3.Main",
+  "file": "lean/FateXWork/Environments/Items831209CDFAB3/Main.lean",
+  "batch_ids": [
+   "items-8.3.12"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items836DD79E9D3",
+  "file": "lean/FateXWork/Environments/Items836DD79E9D3.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items836DD79E9D3.Main",
+  "file": "lean/FateXWork/Environments/Items836DD79E9D3/Main.lean",
+  "batch_ids": [
+   "items-8.3.6"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items8380A3BD055",
+  "file": "lean/FateXWork/Environments/Items8380A3BD055.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items8380A3BD055.Main",
+  "file": "lean/FateXWork/Environments/Items8380A3BD055/Main.lean",
+  "batch_ids": [
+   "items-8.38"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items8383FBBBE19",
+  "file": "lean/FateXWork/Environments/Items8383FBBBE19.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items8383FBBBE19.Main",
+  "file": "lean/FateXWork/Environments/Items8383FBBBE19/Main.lean",
+  "batch_ids": [
+   "items-8.3.8"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items8391441AB35",
+  "file": "lean/FateXWork/Environments/Items8391441AB35.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items8391441AB35.Main",
+  "file": "lean/FateXWork/Environments/Items8391441AB35/Main.lean",
+  "batch_ids": [
+   "items-8.3.9"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items8441179B3A3.Main",
+  "file": "lean/FateXWork/Environments/Items8441179B3A3/Main.lean",
+  "batch_ids": [
+   "items-8.4.4"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items8568AB24DC5",
+  "file": "lean/FateXWork/Environments/Items8568AB24DC5.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items8568AB24DC5.Main",
+  "file": "lean/FateXWork/Environments/Items8568AB24DC5/Main.lean",
+  "batch_ids": [
+   "items-8.5.6"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items8843DC805A",
+  "file": "lean/FateXWork/Environments/Items8843DC805A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items8843DC805A.Main",
+  "file": "lean/FateXWork/Environments/Items8843DC805A/Main.lean",
+  "batch_ids": [
+   "items-8.8"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.Items94240074AE2.Main",
+  "file": "lean/FateXWork/Environments/Items94240074AE2/Main.lean",
+  "batch_ids": [
+   "items-9.4.2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items964640AE5DA",
+  "file": "lean/FateXWork/Environments/Items964640AE5DA.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Items964640AE5DA.Main",
+  "file": "lean/FateXWork/Environments/Items964640AE5DA/Main.lean",
+  "batch_ids": [
+   "items-9.6.4"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP10N1897A046A",
+  "file": "lean/FateXWork/Environments/ItemsP10N1897A046A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP10N1897A046A.Main",
+  "file": "lean/FateXWork/Environments/ItemsP10N1897A046A/Main.lean",
+  "batch_ids": [
+   "items-p10.n1"
+  ],
+  "campaign_status": "statement_retry",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP112D11CC14017.Main",
+  "file": "lean/FateXWork/Environments/ItemsP112D11CC14017/Main.lean",
+  "batch_ids": [
+   "items-p112.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP112D20E9D7F35.Main",
+  "file": "lean/FateXWork/Environments/ItemsP112D20E9D7F35/Main.lean",
+  "batch_ids": [
+   "items-p112.d2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP113F14C5EAF98.Main",
+  "file": "lean/FateXWork/Environments/ItemsP113F14C5EAF98/Main.lean",
+  "batch_ids": [
+   "items-p113.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP115D2B12C45F6.Main",
+  "file": "lean/FateXWork/Environments/ItemsP115D2B12C45F6/Main.lean",
+  "batch_ids": [
+   "items-p115.d2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP117X12FAE664A",
+  "file": "lean/FateXWork/Environments/ItemsP117X12FAE664A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP117X12FAE664A.Main",
+  "file": "lean/FateXWork/Environments/ItemsP117X12FAE664A/Main.lean",
+  "batch_ids": [
+   "items-p117.x1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP125D158BAD7BD",
+  "file": "lean/FateXWork/Environments/ItemsP125D158BAD7BD.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP125D158BAD7BD.Main",
+  "file": "lean/FateXWork/Environments/ItemsP125D158BAD7BD/Main.lean",
+  "batch_ids": [
+   "items-p125.d1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP129N1A71FC9E5.Main",
+  "file": "lean/FateXWork/Environments/ItemsP129N1A71FC9E5/Main.lean",
+  "batch_ids": [
+   "items-p129.n1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP130F576BD2D64",
+  "file": "lean/FateXWork/Environments/ItemsP130F576BD2D64.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP130F576BD2D64.Main",
+  "file": "lean/FateXWork/Environments/ItemsP130F576BD2D64/Main.lean",
+  "batch_ids": [
+   "items-p130.f5"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP132E1AB0E1BE3.Main",
+  "file": "lean/FateXWork/Environments/ItemsP132E1AB0E1BE3/Main.lean",
+  "batch_ids": [
+   "items-p132.e1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP133F14DA765EA",
+  "file": "lean/FateXWork/Environments/ItemsP133F14DA765EA.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP133F14DA765EA.Main",
+  "file": "lean/FateXWork/Environments/ItemsP133F14DA765EA/Main.lean",
+  "batch_ids": [
+   "items-p133.f1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP134F217515236",
+  "file": "lean/FateXWork/Environments/ItemsP134F217515236.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP134F217515236.Main",
+  "file": "lean/FateXWork/Environments/ItemsP134F217515236/Main.lean",
+  "batch_ids": [
+   "items-p134.f2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP13D1D20B9169.Main",
+  "file": "lean/FateXWork/Environments/ItemsP13D1D20B9169/Main.lean",
+  "batch_ids": [
+   "items-p13.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP151T1259012C2",
+  "file": "lean/FateXWork/Environments/ItemsP151T1259012C2.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP151T1259012C2.Main",
+  "file": "lean/FateXWork/Environments/ItemsP151T1259012C2/Main.lean",
+  "batch_ids": [
+   "items-p151.t1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP152D1166E7E6B.Main",
+  "file": "lean/FateXWork/Environments/ItemsP152D1166E7E6B/Main.lean",
+  "batch_ids": [
+   "items-p152.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP15D11EFF0C3D.Main",
+  "file": "lean/FateXWork/Environments/ItemsP15D11EFF0C3D/Main.lean",
+  "batch_ids": [
+   "items-p15.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP162F37CCACE29.Main",
+  "file": "lean/FateXWork/Environments/ItemsP162F37CCACE29/Main.lean",
+  "batch_ids": [
+   "items-p162.f3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP16D1364F90B0.Main",
+  "file": "lean/FateXWork/Environments/ItemsP16D1364F90B0/Main.lean",
+  "batch_ids": [
+   "items-p16.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP16E1ED0E26E2.Main",
+  "file": "lean/FateXWork/Environments/ItemsP16E1ED0E26E2/Main.lean",
+  "batch_ids": [
+   "items-p16.e1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP174F1C6D41719.Main",
+  "file": "lean/FateXWork/Environments/ItemsP174F1C6D41719/Main.lean",
+  "batch_ids": [
+   "items-p174.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP17D21533F384.Main",
+  "file": "lean/FateXWork/Environments/ItemsP17D21533F384/Main.lean",
+  "batch_ids": [
+   "items-p17.d2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP17F20095687A",
+  "file": "lean/FateXWork/Environments/ItemsP17F20095687A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP17F20095687A.Main",
+  "file": "lean/FateXWork/Environments/ItemsP17F20095687A/Main.lean",
+  "batch_ids": [
+   "items-p17.f2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP17X11E0C4FFF.Main",
+  "file": "lean/FateXWork/Environments/ItemsP17X11E0C4FFF/Main.lean",
+  "batch_ids": [
+   "items-p17.x1"
+  ],
+  "campaign_status": "proof_retry",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP17X28476E610",
+  "file": "lean/FateXWork/Environments/ItemsP17X28476E610.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP17X28476E610.Main",
+  "file": "lean/FateXWork/Environments/ItemsP17X28476E610/Main.lean",
+  "batch_ids": [
+   "items-p17.x2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP181D238789BB2.Main",
+  "file": "lean/FateXWork/Environments/ItemsP181D238789BB2/Main.lean",
+  "batch_ids": [
+   "items-p181.d2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP182N1E0D06116.Main",
+  "file": "lean/FateXWork/Environments/ItemsP182N1E0D06116/Main.lean",
+  "batch_ids": [
+   "items-p182.n1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP18D279A90ABF.Main",
+  "file": "lean/FateXWork/Environments/ItemsP18D279A90ABF/Main.lean",
+  "batch_ids": [
+   "items-p18.d2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP18F16602DB0C.Main",
+  "file": "lean/FateXWork/Environments/ItemsP18F16602DB0C/Main.lean",
+  "batch_ids": [
+   "items-p18.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP18N185F68277.Main",
+  "file": "lean/FateXWork/Environments/ItemsP18N185F68277/Main.lean",
+  "batch_ids": [
+   "items-p18.n1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP19D1ADE2A9ED.Main",
+  "file": "lean/FateXWork/Environments/ItemsP19D1ADE2A9ED/Main.lean",
+  "batch_ids": [
+   "items-p19.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP19D4A0BEB0CD.Main",
+  "file": "lean/FateXWork/Environments/ItemsP19D4A0BEB0CD/Main.lean",
+  "batch_ids": [
+   "items-p19.d4"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP19D82D86EC31.Main",
+  "file": "lean/FateXWork/Environments/ItemsP19D82D86EC31/Main.lean",
+  "batch_ids": [
+   "items-p19.d8"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP19D905F2C103.Main",
+  "file": "lean/FateXWork/Environments/ItemsP19D905F2C103/Main.lean",
+  "batch_ids": [
+   "items-p19.d9"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP19F2B2D9F31D.Main",
+  "file": "lean/FateXWork/Environments/ItemsP19F2B2D9F31D/Main.lean",
+  "batch_ids": [
+   "items-p19.f2"
+  ],
+  "campaign_status": "proof_retry",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP206X17764CED4",
+  "file": "lean/FateXWork/Environments/ItemsP206X17764CED4.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP206X17764CED4.Main",
+  "file": "lean/FateXWork/Environments/ItemsP206X17764CED4/Main.lean",
+  "batch_ids": [
+   "items-p206.x1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP207N1D11F3CB4",
+  "file": "lean/FateXWork/Environments/ItemsP207N1D11F3CB4.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP207N1D11F3CB4.Main",
+  "file": "lean/FateXWork/Environments/ItemsP207N1D11F3CB4/Main.lean",
+  "batch_ids": [
+   "items-p207.n1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP207X114CCC2B4",
+  "file": "lean/FateXWork/Environments/ItemsP207X114CCC2B4.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP207X114CCC2B4.Main",
+  "file": "lean/FateXWork/Environments/ItemsP207X114CCC2B4/Main.lean",
+  "batch_ids": [
+   "items-p207.x1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP20F11A006C47.Main",
+  "file": "lean/FateXWork/Environments/ItemsP20F11A006C47/Main.lean",
+  "batch_ids": [
+   "items-p20.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP217N196491E60",
+  "file": "lean/FateXWork/Environments/ItemsP217N196491E60.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP217N196491E60.Main",
+  "file": "lean/FateXWork/Environments/ItemsP217N196491E60/Main.lean",
+  "batch_ids": [
+   "items-p217.n1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP218D1784C01EC",
+  "file": "lean/FateXWork/Environments/ItemsP218D1784C01EC.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP218D1784C01EC.Main",
+  "file": "lean/FateXWork/Environments/ItemsP218D1784C01EC/Main.lean",
+  "batch_ids": [
+   "items-p218.d1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP21D16400E0AB.Main",
+  "file": "lean/FateXWork/Environments/ItemsP21D16400E0AB/Main.lean",
+  "batch_ids": [
+   "items-p21.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP21D28C188C80.Main",
+  "file": "lean/FateXWork/Environments/ItemsP21D28C188C80/Main.lean",
+  "batch_ids": [
+   "items-p21.d2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP21D3AF5A7D94.Main",
+  "file": "lean/FateXWork/Environments/ItemsP21D3AF5A7D94/Main.lean",
+  "batch_ids": [
+   "items-p21.d3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP21F1BE5B1241.Main",
+  "file": "lean/FateXWork/Environments/ItemsP21F1BE5B1241/Main.lean",
+  "batch_ids": [
+   "items-p21.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP21F2972C1DC7.Main",
+  "file": "lean/FateXWork/Environments/ItemsP21F2972C1DC7/Main.lean",
+  "batch_ids": [
+   "items-p21.f2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP228N111390F7D.Main",
+  "file": "lean/FateXWork/Environments/ItemsP228N111390F7D/Main.lean",
+  "batch_ids": [
+   "items-p228.n1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP22F13A680A2F.Main",
+  "file": "lean/FateXWork/Environments/ItemsP22F13A680A2F/Main.lean",
+  "batch_ids": [
+   "items-p22.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP239F102D27411",
+  "file": "lean/FateXWork/Environments/ItemsP239F102D27411.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP239F102D27411.Main",
+  "file": "lean/FateXWork/Environments/ItemsP239F102D27411/Main.lean",
+  "batch_ids": [
+   "items-p239.f1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23D1C46D55EA.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23D1C46D55EA/Main.lean",
+  "batch_ids": [
+   "items-p23.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23D29A4D42F4.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23D29A4D42F4/Main.lean",
+  "batch_ids": [
+   "items-p23.d2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23D34000F9D6.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23D34000F9D6/Main.lean",
+  "batch_ids": [
+   "items-p23.d3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23F11646FFDF",
+  "file": "lean/FateXWork/Environments/ItemsP23F11646FFDF.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23F11646FFDF.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23F11646FFDF/Main.lean",
+  "batch_ids": [
+   "items-p23.f1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23F2B9CA6341",
+  "file": "lean/FateXWork/Environments/ItemsP23F2B9CA6341.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23F2B9CA6341.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23F2B9CA6341/Main.lean",
+  "batch_ids": [
+   "items-p23.f2"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23F379B32C65.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23F379B32C65/Main.lean",
+  "batch_ids": [
+   "items-p23.f3"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23F4F8B41594.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23F4F8B41594/Main.lean",
+  "batch_ids": [
+   "items-p23.f4"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23F506B2C7BC.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23F506B2C7BC/Main.lean",
+  "batch_ids": [
+   "items-p23.f5"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP23R18455700D.Main",
+  "file": "lean/FateXWork/Environments/ItemsP23R18455700D/Main.lean",
+  "batch_ids": [
+   "items-p23.r1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP24R13A08F797.Main",
+  "file": "lean/FateXWork/Environments/ItemsP24R13A08F797/Main.lean",
+  "batch_ids": [
+   "items-p24.r1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP25F1630F1C21.Main",
+  "file": "lean/FateXWork/Environments/ItemsP25F1630F1C21/Main.lean",
+  "batch_ids": [
+   "items-p25.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP265D114AF3916",
+  "file": "lean/FateXWork/Environments/ItemsP265D114AF3916.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP265D114AF3916.Main",
+  "file": "lean/FateXWork/Environments/ItemsP265D114AF3916/Main.lean",
+  "batch_ids": [
+   "items-p265.d1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP26D180ACAC75.Main",
+  "file": "lean/FateXWork/Environments/ItemsP26D180ACAC75/Main.lean",
+  "batch_ids": [
+   "items-p26.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP26D237529551.Main",
+  "file": "lean/FateXWork/Environments/ItemsP26D237529551/Main.lean",
+  "batch_ids": [
+   "items-p26.d2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP279N161BA7E56.Main",
+  "file": "lean/FateXWork/Environments/ItemsP279N161BA7E56/Main.lean",
+  "batch_ids": [
+   "items-p279.n1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP286A12F113D6A",
+  "file": "lean/FateXWork/Environments/ItemsP286A12F113D6A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP286A12F113D6A.Main",
+  "file": "lean/FateXWork/Environments/ItemsP286A12F113D6A/Main.lean",
+  "batch_ids": [
+   "items-p286.a1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP28F19547C9F5.Main",
+  "file": "lean/FateXWork/Environments/ItemsP28F19547C9F5/Main.lean",
+  "batch_ids": [
+   "items-p28.f1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP34F1EB0E2366.Main",
+  "file": "lean/FateXWork/Environments/ItemsP34F1EB0E2366/Main.lean",
+  "batch_ids": [
+   "items-p34.f1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP34N10D8CF3E5.Main",
+  "file": "lean/FateXWork/Environments/ItemsP34N10D8CF3E5/Main.lean",
+  "batch_ids": [
+   "items-p34.n1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP34N20A548900.Main",
+  "file": "lean/FateXWork/Environments/ItemsP34N20A548900/Main.lean",
+  "batch_ids": [
+   "items-p34.n2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP34N31707CCEE.Main",
+  "file": "lean/FateXWork/Environments/ItemsP34N31707CCEE/Main.lean",
+  "batch_ids": [
+   "items-p34.n3"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP34T15F161C42.Main",
+  "file": "lean/FateXWork/Environments/ItemsP34T15F161C42/Main.lean",
+  "batch_ids": [
+   "items-p34.t1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP35F146C65CA5",
+  "file": "lean/FateXWork/Environments/ItemsP35F146C65CA5.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP35F146C65CA5.Main",
+  "file": "lean/FateXWork/Environments/ItemsP35F146C65CA5/Main.lean",
+  "batch_ids": [
+   "items-p35.f1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP36D18630B1CF.Main",
+  "file": "lean/FateXWork/Environments/ItemsP36D18630B1CF/Main.lean",
+  "batch_ids": [
+   "items-p36.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP37T118EDD568.Main",
+  "file": "lean/FateXWork/Environments/ItemsP37T118EDD568/Main.lean",
+  "batch_ids": [
+   "items-p37.t1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP40D1B699148A.Main",
+  "file": "lean/FateXWork/Environments/ItemsP40D1B699148A/Main.lean",
+  "batch_ids": [
+   "items-p40.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP40D271A95F73.Main",
+  "file": "lean/FateXWork/Environments/ItemsP40D271A95F73/Main.lean",
+  "batch_ids": [
+   "items-p40.d2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP41D10DFCD6DD.Main",
+  "file": "lean/FateXWork/Environments/ItemsP41D10DFCD6DD/Main.lean",
+  "batch_ids": [
+   "items-p41.d1"
+  ],
+  "campaign_status": "proof_retry",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP41X2C1F05CBE.Main",
+  "file": "lean/FateXWork/Environments/ItemsP41X2C1F05CBE/Main.lean",
+  "batch_ids": [
+   "items-p41.x2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP42D153FB4744.Main",
+  "file": "lean/FateXWork/Environments/ItemsP42D153FB4744/Main.lean",
+  "batch_ids": [
+   "items-p42.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP43D14BEF4B4C.Main",
+  "file": "lean/FateXWork/Environments/ItemsP43D14BEF4B4C/Main.lean",
+  "batch_ids": [
+   "items-p43.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP43N1A220DAA1.Main",
+  "file": "lean/FateXWork/Environments/ItemsP43N1A220DAA1/Main.lean",
+  "batch_ids": [
+   "items-p43.n1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP43Q18FA69566.Main",
+  "file": "lean/FateXWork/Environments/ItemsP43Q18FA69566/Main.lean",
+  "batch_ids": [
+   "items-p43.q1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP44D165849383.Main",
+  "file": "lean/FateXWork/Environments/ItemsP44D165849383/Main.lean",
+  "batch_ids": [
+   "items-p44.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP44X12C272068.Main",
+  "file": "lean/FateXWork/Environments/ItemsP44X12C272068/Main.lean",
+  "batch_ids": [
+   "items-p44.x1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP46D1FC07C3DA.Main",
+  "file": "lean/FateXWork/Environments/ItemsP46D1FC07C3DA/Main.lean",
+  "batch_ids": [
+   "items-p46.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP47F11CDCB782.Main",
+  "file": "lean/FateXWork/Environments/ItemsP47F11CDCB782/Main.lean",
+  "batch_ids": [
+   "items-p47.f1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP50F13409CB4F",
+  "file": "lean/FateXWork/Environments/ItemsP50F13409CB4F.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP50F13409CB4F.Main",
+  "file": "lean/FateXWork/Environments/ItemsP50F13409CB4F/Main.lean",
+  "batch_ids": [
+   "items-p50.f1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP60D1E8B11F4B.Main",
+  "file": "lean/FateXWork/Environments/ItemsP60D1E8B11F4B/Main.lean",
+  "batch_ids": [
+   "items-p60.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 3
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP63N1D73E2CFF.Main",
+  "file": "lean/FateXWork/Environments/ItemsP63N1D73E2CFF/Main.lean",
+  "batch_ids": [
+   "items-p63.n1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP69D12B15B65A.Main",
+  "file": "lean/FateXWork/Environments/ItemsP69D12B15B65A/Main.lean",
+  "batch_ids": [
+   "items-p69.d1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP70D134EDA6CE.Main",
+  "file": "lean/FateXWork/Environments/ItemsP70D134EDA6CE/Main.lean",
+  "batch_ids": [
+   "items-p70.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP70F15DF7F00A.Main",
+  "file": "lean/FateXWork/Environments/ItemsP70F15DF7F00A/Main.lean",
+  "batch_ids": [
+   "items-p70.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP70N14168BEE6.Main",
+  "file": "lean/FateXWork/Environments/ItemsP70N14168BEE6/Main.lean",
+  "batch_ids": [
+   "items-p70.n1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP71F12FFF99DD.Main",
+  "file": "lean/FateXWork/Environments/ItemsP71F12FFF99DD/Main.lean",
+  "batch_ids": [
+   "items-p71.f1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP73D1FC7D6C33",
+  "file": "lean/FateXWork/Environments/ItemsP73D1FC7D6C33.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP73D1FC7D6C33.Main",
+  "file": "lean/FateXWork/Environments/ItemsP73D1FC7D6C33/Main.lean",
+  "batch_ids": [
+   "items-p73.d1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP73D2F6F9A23F.Main",
+  "file": "lean/FateXWork/Environments/ItemsP73D2F6F9A23F/Main.lean",
+  "batch_ids": [
+   "items-p73.d2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP74D14B4B36AB.Main",
+  "file": "lean/FateXWork/Environments/ItemsP74D14B4B36AB/Main.lean",
+  "batch_ids": [
+   "items-p74.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP74F1C4FCAC6E.Main",
+  "file": "lean/FateXWork/Environments/ItemsP74F1C4FCAC6E/Main.lean",
+  "batch_ids": [
+   "items-p74.f1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP76D259DCDB12.Main",
+  "file": "lean/FateXWork/Environments/ItemsP76D259DCDB12/Main.lean",
+  "batch_ids": [
+   "items-p76.d2"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP76F152F8351C.Main",
+  "file": "lean/FateXWork/Environments/ItemsP76F152F8351C/Main.lean",
+  "batch_ids": [
+   "items-p76.f1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP79D1F5F18063.Main",
+  "file": "lean/FateXWork/Environments/ItemsP79D1F5F18063/Main.lean",
+  "batch_ids": [
+   "items-p79.d1"
+  ],
+  "campaign_status": "proof_retry",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP88F102FFB681",
+  "file": "lean/FateXWork/Environments/ItemsP88F102FFB681.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP88F102FFB681.Main",
+  "file": "lean/FateXWork/Environments/ItemsP88F102FFB681/Main.lean",
+  "batch_ids": [
+   "items-p88.f1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP88X19A8577C2.Main",
+  "file": "lean/FateXWork/Environments/ItemsP88X19A8577C2/Main.lean",
+  "batch_ids": [
+   "items-p88.x1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP88X27BCF9A92.Main",
+  "file": "lean/FateXWork/Environments/ItemsP88X27BCF9A92/Main.lean",
+  "batch_ids": [
+   "items-p88.x2"
+  ],
+  "campaign_status": "proof_retry",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP89D1F58FDA05.Main",
+  "file": "lean/FateXWork/Environments/ItemsP89D1F58FDA05/Main.lean",
+  "batch_ids": [
+   "items-p89.d1"
+  ],
+  "campaign_status": "proof_retry",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP89F1AA9AF731",
+  "file": "lean/FateXWork/Environments/ItemsP89F1AA9AF731.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP89F1AA9AF731.Main",
+  "file": "lean/FateXWork/Environments/ItemsP89F1AA9AF731/Main.lean",
+  "batch_ids": [
+   "items-p89.f1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP90N128AD023A.Main",
+  "file": "lean/FateXWork/Environments/ItemsP90N128AD023A/Main.lean",
+  "batch_ids": [
+   "items-p90.n1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP91F1960EEB73.Main",
+  "file": "lean/FateXWork/Environments/ItemsP91F1960EEB73/Main.lean",
+  "batch_ids": [
+   "items-p91.f1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP94F16EDCCC6E",
+  "file": "lean/FateXWork/Environments/ItemsP94F16EDCCC6E.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP94F16EDCCC6E.Main",
+  "file": "lean/FateXWork/Environments/ItemsP94F16EDCCC6E/Main.lean",
+  "batch_ids": [
+   "items-p94.f1"
+  ],
+  "campaign_status": "skipped",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP96T17F9EAAED.Main",
+  "file": "lean/FateXWork/Environments/ItemsP96T17F9EAAED/Main.lean",
+  "batch_ids": [
+   "items-p96.t1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP9D165ECED30.Main",
+  "file": "lean/FateXWork/Environments/ItemsP9D165ECED30/Main.lean",
+  "batch_ids": [
+   "items-p9.d1"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP9D20370D770.Main",
+  "file": "lean/FateXWork/Environments/ItemsP9D20370D770/Main.lean",
+  "batch_ids": [
+   "items-p9.d2"
+  ],
+  "campaign_status": "proofs_completed",
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP9F12AA861C8",
+  "file": "lean/FateXWork/Environments/ItemsP9F12AA861C8.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.ItemsP9F12AA861C8.Main",
+  "file": "lean/FateXWork/Environments/ItemsP9F12AA861C8/Main.lean",
+  "batch_ids": [
+   "items-p9.f1"
+  ],
+  "campaign_status": "statements_completed",
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Environments.Shared",
+  "file": "lean/FateXWork/Environments/Shared.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Shared.Analysis",
+  "file": "lean/FateXWork/Environments/Shared/Analysis.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Shared.Basic",
+  "file": "lean/FateXWork/Environments/Shared/Basic.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Shared.Convexity",
+  "file": "lean/FateXWork/Environments/Shared/Convexity.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Shared.LinearAlgebra",
+  "file": "lean/FateXWork/Environments/Shared/LinearAlgebra.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Environments.Shared.Probability",
+  "file": "lean/FateXWork/Environments/Shared/Probability.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.PilotQuestions.Items1152CE4D1A",
+  "file": "lean/FateXWork/PilotQuestions/Items1152CE4D1A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.PilotQuestions.Items1152CE4D1A.Main",
+  "file": "lean/FateXWork/PilotQuestions/Items1152CE4D1A/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.PilotQuestions.Items1261D0ADA8",
+  "file": "lean/FateXWork/PilotQuestions/Items1261D0ADA8.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.PilotQuestions.Items1261D0ADA8.Main",
+  "file": "lean/FateXWork/PilotQuestions/Items1261D0ADA8/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Chapter0Batch17B33D6E1",
+  "file": "lean/FateXWork/Questions/Chapter0Batch17B33D6E1.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Chapter0Batch17B33D6E1.Main",
+  "file": "lean/FateXWork/Questions/Chapter0Batch17B33D6E1/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items018353C612",
+  "file": "lean/FateXWork/Questions/Items018353C612.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items018353C612.Main",
+  "file": "lean/FateXWork/Questions/Items018353C612/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items02E620D532",
+  "file": "lean/FateXWork/Questions/Items02E620D532.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items02E620D532.Main",
+  "file": "lean/FateXWork/Questions/Items02E620D532/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items039886646C",
+  "file": "lean/FateXWork/Questions/Items039886646C.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items039886646C.Main",
+  "file": "lean/FateXWork/Questions/Items039886646C/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items0438222EE4",
+  "file": "lean/FateXWork/Questions/Items0438222EE4.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items0438222EE4.Main",
+  "file": "lean/FateXWork/Questions/Items0438222EE4/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Questions.Items05784E1F74",
+  "file": "lean/FateXWork/Questions/Items05784E1F74.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items05784E1F74.Main",
+  "file": "lean/FateXWork/Questions/Items05784E1F74/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "statement_with_sorry",
+  "sorry_count": 2
+ },
+ {
+  "module": "FateXWork.Questions.Items066BBAC934",
+  "file": "lean/FateXWork/Questions/Items066BBAC934.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items066BBAC934.Main",
+  "file": "lean/FateXWork/Questions/Items066BBAC934/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items250ABCDC76",
+  "file": "lean/FateXWork/Questions/Items250ABCDC76.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items250ABCDC76.Main",
+  "file": "lean/FateXWork/Questions/Items250ABCDC76/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items3290E5CEC65",
+  "file": "lean/FateXWork/Questions/Items3290E5CEC65.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items3290E5CEC65.Main",
+  "file": "lean/FateXWork/Questions/Items3290E5CEC65/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items43271284AC7",
+  "file": "lean/FateXWork/Questions/Items43271284AC7.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items43271284AC7.Main",
+  "file": "lean/FateXWork/Questions/Items43271284AC7/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items52726158C3E",
+  "file": "lean/FateXWork/Questions/Items52726158C3E.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items52726158C3E.Main",
+  "file": "lean/FateXWork/Questions/Items52726158C3E/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items52F8C2FC55",
+  "file": "lean/FateXWork/Questions/Items52F8C2FC55.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items52F8C2FC55.Main",
+  "file": "lean/FateXWork/Questions/Items52F8C2FC55/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items541DC066E6",
+  "file": "lean/FateXWork/Questions/Items541DC066E6.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items541DC066E6.Main",
+  "file": "lean/FateXWork/Questions/Items541DC066E6/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items63710AE3100",
+  "file": "lean/FateXWork/Questions/Items63710AE3100.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items63710AE3100.Main",
+  "file": "lean/FateXWork/Questions/Items63710AE3100/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items714830F700A",
+  "file": "lean/FateXWork/Questions/Items714830F700A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items714830F700A.Main",
+  "file": "lean/FateXWork/Questions/Items714830F700A/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items74CB3BE998",
+  "file": "lean/FateXWork/Questions/Items74CB3BE998.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items74CB3BE998.Main",
+  "file": "lean/FateXWork/Questions/Items74CB3BE998/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items820EAB6462A",
+  "file": "lean/FateXWork/Questions/Items820EAB6462A.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items820EAB6462A.Main",
+  "file": "lean/FateXWork/Questions/Items820EAB6462A/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items823643B1932",
+  "file": "lean/FateXWork/Questions/Items823643B1932.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items823643B1932.Main",
+  "file": "lean/FateXWork/Questions/Items823643B1932/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items9112D50A770",
+  "file": "lean/FateXWork/Questions/Items9112D50A770.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items9112D50A770.Main",
+  "file": "lean/FateXWork/Questions/Items9112D50A770/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items915662E892E",
+  "file": "lean/FateXWork/Questions/Items915662E892E.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items915662E892E.Main",
+  "file": "lean/FateXWork/Questions/Items915662E892E/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items941CC4EBD4D",
+  "file": "lean/FateXWork/Questions/Items941CC4EBD4D.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Items941CC4EBD4D.Main",
+  "file": "lean/FateXWork/Questions/Items941CC4EBD4D/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Shared.Analysis",
+  "file": "lean/FateXWork/Questions/Shared/Analysis.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Questions.Shared.Probability",
+  "file": "lean/FateXWork/Questions/Shared/Probability.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Theorem002",
+  "file": "lean/FateXWork/Theorem002.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "proved",
+  "sorry_count": 0
+ },
+ {
+  "module": "FateXWork.Theorem002.Main",
+  "file": "lean/FateXWork/Theorem002/Main.lean",
+  "batch_ids": [],
+  "campaign_status": null,
+  "classification": "statement_with_sorry",
+  "sorry_count": 1
+ }
+]
