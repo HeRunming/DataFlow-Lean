@@ -1,0 +1,20 @@
+/.lake
+/.leanflow
+/.artifacts
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Test fixture: the document-inspection test expects this bibliography.
+!docs/PythagoreanPolynomialParametrization/pyth.bbl

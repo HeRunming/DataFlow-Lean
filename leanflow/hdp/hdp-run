@@ -1,0 +1,324 @@
+#!/opt/hdp/leanflow/.venv/bin/python
+"""Launch HDP campaigns locally with one provider and remote-only Lean checks."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+WORKSPACE = Path(
+    str(os.getenv("HDP_WORKSPACE", "") or "").strip() or "/opt/hdp"
+).expanduser()
+SOURCE = WORKSPACE / "leanflow"
+PROJECT = WORKSPACE / "fate-x-work"
+PYTHON = SOURCE / ".venv/bin/python"
+MANAGED_HOME = WORKSPACE / ".leanflow-home"
+REMOTE_HOST = "lean-host.example"
+REMOTE_PORT = "22"
+REMOTE_USER = "lean"
+REMOTE_ROOT = "/srv/lean/fate-x-work"
+# Set when the orchestrator and the Lean compiler are the same machine, which is
+# the case once this runs on the Lean host. It does two things: it stops the SSH
+# backend from being selected (an SSH hop to yourself fails unless self-login is
+# authorized, and it would route every Lean call through sshd), and it switches
+# the project sync into its same-tree short-circuit. Everything else -- the
+# provider calls, the campaign state -- is unchanged, so the environment is
+# built exactly as for a remote run apart from the backend and the paths.
+LOCAL_LEAN_HOST = str(os.getenv("HDP_LOCAL_LEAN_HOST", "") or "").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+BASE_URL = (
+    str(os.getenv("HDP_PROVIDER_BASE_URL", "") or "").strip()
+    or "http://relay.example:3000/v1"
+)
+MODEL = str(os.getenv("HDP_PROVIDER_MODEL", "") or "").strip() or "gpt-6-sol"
+LAKE = SOURCE / "remote-bin/lake"
+# Authorized relay credentials are represented by fingerprints only.  The
+# launcher may receive a comma-separated ``M2F_CODEX_API_KEYS`` pool; the
+# selected child key is injected by hdp-scale and never written to telemetry.
+#
+# Rotated on 2026-10-08 when the operator moved off zcloud. The four zcloud keys
+# were left in place until the replacement was confirmed live, then removed: a
+# dead fingerprint that still sits in this allowlist is worse than no allowlist,
+# because it makes a revoked credential look authorized.
+AUTHORIZED_KEY_SHA256S = {
+    "0000000000000000000000000000000000000000000000000000000000000000",
+    "0000000000000000000000000000000000000000000000000000000000000000",
+    # Second gpt-6-sol key on the same relay, added 2026-10-10 so four workers
+    # share two credentials instead of one.
+    "0000000000000000000000000000000000000000000000000000000000000000",
+}
+EXPECTED_KEY_SHA256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+sys.path.insert(0, str(SOURCE))
+os.environ["LEANFLOW_HOME"] = str(MANAGED_HOME)
+
+
+def launch_environment() -> dict[str, str]:
+    """Resolve a credential once, then populate every child field explicitly."""
+    from core.home import leanflow_home
+    from leanflow_cli.config import load_env_file
+    from leanflow_cli.runtime.env_loader import NATIVE_AUXILIARY_PROVIDER_TARGETS
+
+    file_values = load_env_file()
+    key = ""
+    key_pool = []
+    for values in (os.environ, file_values):
+        raw_pool = str(values.get("M2F_CODEX_API_KEYS", "") or "").strip()
+        if raw_pool and not key_pool:
+            key_pool = [
+                candidate.strip()
+                for candidate in raw_pool.split(",")
+                if candidate.strip()
+            ]
+    # A scale child explicitly carries a slot, so prefer the configured pool
+    # even when the parent shell still exports a legacy single key.
+    if key_pool and "HDP_WORKER_SLOT" in os.environ:
+        slot = int(str(os.environ.get("HDP_WORKER_SLOT", "0") or "0"))
+        key = key_pool[slot % len(key_pool)]
+    else:
+        for values in (os.environ, file_values):
+            key = str(values.get("M2F_CODEX_API_KEY", "") or "").strip()
+            if key:
+                break
+            if key_pool:
+                key = key_pool[0]
+                break
+            for prefix in ("LEANFLOW_OPENAI", "OPENAI"):
+                endpoint = str(values.get(f"{prefix}_BASE_URL", "") or "").rstrip("/")
+                candidate = str(values.get(f"{prefix}_API_KEY", "") or "").strip()
+                if candidate and endpoint == BASE_URL:
+                    key = candidate
+                    break
+            if key:
+                break
+    if not key:
+        raise RuntimeError(
+            "Set M2F_CODEX_API_KEY, or configure a zcloud endpoint/key in "
+            f"{leanflow_home() / '.env'}; no credential was found."
+        )
+    key_fingerprint = hashlib.sha256(key.encode()).hexdigest()
+    if key_fingerprint not in AUTHORIZED_KEY_SHA256S:
+        raise RuntimeError(
+            "The configured zcloud credential does not match the authorized key."
+        )
+
+    env = dict(os.environ)
+    env.update(
+        {
+            "LEANFLOW_HOME": str(leanflow_home()),
+            "PYTHONPATH": str(SOURCE),
+            # Keep the working directory off sys.path. Python normally prepends
+            # the current directory, and every campaign child runs with
+            # cwd = the Lean project, so any module left in that directory
+            # shadows the real source for the whole process. A stale
+            # ``run_agent.py`` there silently reverted the quota output cap and
+            # made every provider call fail with "quota-gated calls require an
+            # explicit positive output cap"; the same trap catches package
+            # directories like ``tests``. PYTHONSAFEPATH makes that impossible
+            # rather than relying on nobody ever leaving a file in the project.
+            "PYTHONSAFEPATH": "1",
+            "PYTHONUNBUFFERED": "1",
+            "M2F_CODEX_API_KEY": key,
+            "HDP_EXPECTED_KEY_SHA256": key_fingerprint,
+            "LEANFLOW_OPENAI_API_KEY": key,
+            "LEANFLOW_OPENAI_BASE_URL": BASE_URL,
+            "OPENAI_API_KEY": key,
+            "OPENAI_BASE_URL": BASE_URL,
+            "OPENAI_MODEL": MODEL,
+            "LEANFLOW_INFERENCE_PROVIDER": "custom",
+            "LEANFLOW_NATIVE_PROVIDER": "custom",
+            "LEANFLOW_NATIVE_API_MODE": "chat_completions",
+            "LEANFLOW_NATIVE_API_KEY": key,
+            "LEANFLOW_NATIVE_BASE_URL": BASE_URL,
+            "LEANFLOW_NATIVE_MODEL": MODEL,
+            "LEANFLOW_NATIVE_REASONING_EFFORT": "high",
+            "LEANFLOW_NATIVE_AUXILIARY_PROVIDER": "custom",
+            "LEANFLOW_NATIVE_AUXILIARY_API_KEY": key,
+            "LEANFLOW_NATIVE_AUXILIARY_BASE_URL": BASE_URL,
+            "LEANFLOW_NATIVE_AUXILIARY_MODEL": MODEL,
+            "LEANFLOW_NATIVE_AUXILIARY_REASONING_EFFORT": "high",
+            "LEANFLOW_PROJECT_ROOT": str(PROJECT),
+            # On a single host the Lean backend must not be the SSH environment:
+            # self-login is not authorized, so every Lean call would fail, and
+            # even with a key it would route local work through sshd. The local
+            # backend runs the same commands in-process instead.
+            "TERMINAL_ENV": "local" if LOCAL_LEAN_HOST else "ssh",
+            # The warm probe refuses to start unless the checkout it was handed
+            # matches this variable, which otherwise defaults to the Mac path.
+            # On a single host the project root *is* the Lean host's checkout, so
+            # state it here rather than requiring every launch site to remember
+            # it; a migrated deployment then needs only HDP_WORKSPACE and
+            # HDP_LOCAL_LEAN_HOST.
+            "LEANFLOW_LOCAL_PROJECT_ROOT": str(PROJECT),
+            "TERMINAL_SSH_HOST": REMOTE_HOST,
+            "TERMINAL_SSH_USER": REMOTE_USER,
+            "TERMINAL_SSH_PORT": REMOTE_PORT,
+            "TERMINAL_SSH_KEY": str(
+                Path(
+                    str(os.getenv("TERMINAL_SSH_KEY", "") or "").strip()
+                    or "~/.ssh/id_lean_host"
+                ).expanduser()
+            ),
+            "TERMINAL_SSH_PERSISTENT": "true",
+            "TERMINAL_SSH_SYNC_PROJECT": "true",
+            "TERMINAL_CWD": REMOTE_ROOT,
+            "TERMINAL_SSH_CWD": REMOTE_ROOT,
+            "FILE_ENV": "local",
+            "FILE_CWD": str(PROJECT),
+            "LEAN_PROBE_LAKE_PATH": str(LAKE),
+            "LEANFLOW_LAKE_EXECUTABLE": str(LAKE),
+            "PATH": os.pathsep.join(
+                (str(SOURCE / "remote-bin"), str(PYTHON.parent), env.get("PATH", ""))
+            ),
+        }
+    )
+    for name in (
+        "TERMINAL_TIMEOUT",
+        "LEANFLOW_REMOTE_LEAN_TIMEOUT_S",
+    ):
+        env[name] = "600"
+    for name in (
+        "LEANFLOW_API_TIMEOUT",
+        "LEANFLOW_ADVISORY_VERIFICATION_TIMEOUT_S",
+        "LEANFLOW_RETRIEVAL_PLANNER_TIMEOUT_S",
+    ):
+        # 900s, down from 1800. Doubling to 3600 on 2026-09-28 changed nothing:
+        # the run still lost 17 batches to infrastructure failures (against 2
+        # accepted) and its cost rose from 32M to 43M per eight hours. A request
+        # that has not returned in 900s is not going to; giving up sooner lets
+        # the worker move on instead of holding a slot for a dead wait.
+        env[name] = "900"
+    # Leave room for several slow requests and final Lean verification. It must
+    # exceed the per-request budget above, or the parent would abandon a child
+    # that is still inside a legitimate single request.
+    #
+    # Raised from 6600s to 14400s on 2026-10-03. At 6600s every proofs action in
+    # the 2026-10-02 run died at 6626-6637s (+/-13s) with exit code 124 -- a
+    # timer, not a proof attempt hitting a wall. The logs show the prover still
+    # working when killed (one had an apply_verified_patch composed and ready),
+    # with a mean API call of 30-35s and 100+ calls per attempt: 6600s covers
+    # roughly a third of a real attempt. The 900s per-request budget was never
+    # reached (max observed provider wait 180s), so the aggregate child budget
+    # was the binding constraint. hdp-scale's CHILD_WATCHDOG_SECONDS must stay
+    # larger than this or the supervisor kills the child first.
+    env["LEANFLOW_CAMPAIGN_CHILD_TIMEOUT_S"] = "14400"
+    for provider_name in NATIVE_AUXILIARY_PROVIDER_TARGETS:
+        prefix = provider_name.removesuffix("_PROVIDER")
+        for suffix, value in (
+            ("PROVIDER", "custom"),
+            ("BASE_URL", BASE_URL),
+            ("API_KEY", key),
+            ("MODEL", MODEL),
+            ("REASONING_EFFORT", "high"),
+        ):
+            env[f"{prefix}_{suffix}"] = value
+    return env
+
+
+CHECK_CODE = """
+import hashlib, json, os, sys
+from pathlib import Path
+from core.home import leanflow_home
+from leanflow_cli.runtime.env_loader import load_leanflow_dotenv, reassert_native_auxiliary_provider, NATIVE_AUXILIARY_PROVIDER_TARGETS
+from leanflow_cli.runtime.runtime_provider import resolve_runtime_provider, apply_runtime_model_override
+from leanflow_cli.workflows.project import discover_leanflow_project
+from agent.providers.auxiliary_client import _get_cached_client, _resolve_task_provider_model
+loaded = load_leanflow_dotenv(leanflow_home=leanflow_home(), project_env=Path.cwd() / '.env')
+reassert_native_auxiliary_provider()
+runtime = apply_runtime_model_override(resolve_runtime_provider(requested='custom'), requested_provider='custom', model=os.environ['LEANFLOW_NATIVE_MODEL'])
+project = discover_leanflow_project(Path.cwd())
+key = os.environ['M2F_CODEX_API_KEY']
+roles_match = all(os.environ[n] == 'custom' and os.environ[n.removesuffix('_PROVIDER') + '_API_KEY'] == key and os.environ[n.removesuffix('_PROVIDER') + '_BASE_URL'] == runtime['base_url'] and os.environ[n.removesuffix('_PROVIDER') + '_MODEL'] == runtime['model'] and os.environ[n.removesuffix('_PROVIDER') + '_REASONING_EFFORT'] == 'high' for n in NATIVE_AUXILIARY_PROVIDER_TARGETS)
+clients = {}
+for name in NATIVE_AUXILIARY_PROVIDER_TARGETS:
+    task = name.removeprefix('AUXILIARY_').removesuffix('_PROVIDER').lower()
+    provider, model, base_url, api_key = _resolve_task_provider_model(task, None, None, None, None)
+    client, model = _get_cached_client(provider, model, base_url=base_url, api_key=api_key)
+    clients[task] = bool(client is not None and getattr(client, 'api_key', '') == key and str(getattr(client, 'base_url', '')).rstrip('/') == runtime['base_url'] and model == runtime['model'])
+fingerprint = hashlib.sha256(key.encode()).hexdigest()
+source_root = Path(os.environ['PYTHONPATH'])
+runner = source_root / 'leanflow_cli/formalization/corpus_campaign_runner.py'
+result = dict(python=sys.executable, python_version=sys.version.split()[0], cwd=str(Path.cwd()), leanflow_home=str(leanflow_home()), dotenv_paths=[str(p) for p in loaded], source_root=str(source_root), runner_sha256=hashlib.sha256(runner.read_bytes()).hexdigest(), project_root=str(project.root), manifest=str(project.manifest_path), provider=runtime['provider'], base_url=runtime['base_url'], model=runtime['model'], reasoning_effort=os.environ['LEANFLOW_NATIVE_REASONING_EFFORT'], credential_present=bool(runtime.get('api_key')), credential_matches_launch=runtime.get('api_key') == key, credential_sha256=fingerprint, credential_matches_authorized=fingerprint == os.environ['HDP_EXPECTED_KEY_SHA256'], all_roles_match=roles_match, clients_ready=clients, api_timeout_seconds=os.environ['LEANFLOW_API_TIMEOUT'], reviewer_timeout_seconds=os.environ['LEANFLOW_ADVISORY_VERIFICATION_TIMEOUT_S'], terminal_backend=os.environ['TERMINAL_ENV'], remote_root=os.environ['TERMINAL_CWD'], lake_executable=os.environ['LEAN_PROBE_LAKE_PATH'], api_calls=0, lean_calls=0)
+print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+assert result['credential_present'] and result['credential_matches_launch'] and result['all_roles_match']
+assert result['credential_matches_authorized'] and all(clients.values())
+assert runtime['provider'] == 'custom' and runtime['base_url'] == os.environ['LEANFLOW_NATIVE_BASE_URL'] and runtime['model'] == os.environ['LEANFLOW_NATIVE_MODEL']
+assert str(project.root) == os.environ['LEANFLOW_PROJECT_ROOT']
+"""
+
+
+def main() -> int:
+    """Check child configuration without network, or run an explicit campaign command."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check", action="store_true", help="check a real child; no API or Lean calls"
+    )
+    parser.add_argument(
+        "--campaign", type=Path, default=PROJECT / "HDP/Environments/campaign.json"
+    )
+    options, forwarded = parser.parse_known_args()
+    fixed = {
+        "--project-root": str(PROJECT),
+        "--lake-executable": str(LAKE),
+        "--reasoning-effort": "high",
+        "--review-timeout-seconds": "900",
+        "--statement-compile-timeout-seconds": "600",
+    }
+    for prefix in (
+        "",
+        "statement-",
+        "statement-planner-",
+        "statement-fallback-",
+        "statement-judge-",
+        "review-",
+    ):
+        fixed[f"--{prefix}provider"] = "custom"
+        fixed[f"--{prefix}model"] = MODEL
+    fixed["--proof-model"] = MODEL
+    fixed["--escalation-model"] = MODEL
+    for arg in forwarded:
+        option = arg.partition("=")[0]
+        # argparse accepts unambiguous long-option abbreviations downstream.
+        # Reject prefixes too, so --batch-item-li cannot bypass this boundary.
+        if option.startswith("--") and any(
+            protected.startswith(option) for protected in (*fixed, "--batch-item-limit")
+        ):
+            parser.error(f"{option} is fixed or prohibited by the HDP launcher")
+    if options.check and forwarded:
+        parser.error("--check cannot be combined with campaign runner arguments")
+    campaign = options.campaign.expanduser().resolve()
+    if not campaign.is_relative_to(PROJECT):
+        parser.error("campaign must stay inside the local HDP project")
+    try:
+        env = launch_environment()
+    except RuntimeError as exc:
+        parser.error(str(exc))
+    check = subprocess.run(
+        [str(PYTHON), "-c", CHECK_CODE], cwd=PROJECT, env=env, check=False
+    )
+    if options.check or check.returncode:
+        return check.returncode
+    command = [
+        str(PYTHON),
+        "-m",
+        "leanflow_cli.formalization.corpus_campaign_runner",
+        str(campaign),
+    ]
+    command.extend(forwarded)
+    for name, value in fixed.items():
+        command.extend((name, value))
+    os.chdir(PROJECT)
+    os.execve(PYTHON, command, env)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

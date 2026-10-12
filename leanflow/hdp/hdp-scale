@@ -1,0 +1,1938 @@
+#!/opt/hdp/leanflow/.venv/bin/python
+"""Run finite HDP statement and proof campaigns with shared quota admission."""
+
+from __future__ import annotations
+
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+import re
+import signal
+import subprocess
+import sys
+import time
+from contextlib import contextmanager
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+
+WORKSPACE = Path(
+    str(os.getenv("HDP_WORKSPACE", "") or "").strip() or "/opt/hdp"
+).expanduser()
+SOURCE = WORKSPACE / "leanflow"
+PROJECT = WORKSPACE / "fate-x-work"
+LAUNCHER = WORKSPACE / "hdp-run"
+CANONICAL_QUOTA_QUOTE = (
+    WORKSPACE / ".leanflow-home/logs/zcloud-pricing-20260909T091106Z/quota-quote.json"
+)
+MIN_PROVIDER_ALLOWANCE_TOKENS = 16_384
+# The provider and model this campaign is pinned to. These were inline literals
+# until 2026-10-08, when the operator moved off zcloud onto a different relay and
+# onto ``gpt-6-sol``. Keeping them as one named pair means the quote check, the
+# launcher, and the child environment can never drift apart, and the guard is
+# still a real comparison rather than a no-op. Both must move together: a quote
+# fetched from one endpoint while the children call another would be a pricing
+# fiction, which is exactly what this check exists to catch.
+PINNED_PROVIDER_BASE_URL = str(
+    os.getenv("HDP_PROVIDER_BASE_URL", "") or ""
+).strip() or "http://relay.example:3000/v1"
+PINNED_PROVIDER_MODEL = str(
+    os.getenv("HDP_PROVIDER_MODEL", "") or ""
+).strip() or "gpt-6-sol"
+NO_INFRASTRUCTURE_FUSE_ENV = "HDP_SCALE_NO_INFRASTRUCTURE_FUSE"
+IGNORE_UNKNOWN_HOLDS_ENV = "LEANFLOW_PROVIDER_QUOTA_IGNORE_UNKNOWN_HOLDS"
+# Opt-in only: the per-wave campaign-before/after snapshots. They have no code
+# consumer, cost ~90MB per wave, and dominated the scale-runs tree (9.4GB, 99.4%
+# of it) with near-duplicate content. Set to a truthy value to record them.
+CAMPAIGN_SNAPSHOTS_ENV = "HDP_SCALE_CAMPAIGN_SNAPSHOTS"
+# Raised from 2 on 2026-09-30. At 2 the overnight run tripped the fuse eight
+# times and spent the cooldown windows idle; the failures behind them are
+# provider 5xx and timeouts that recur regardless, so a higher threshold trades
+# a little wasted work for materially more dispatched batches.
+INFRASTRUCTURE_FUSE_THRESHOLD = 6
+# Reasons that pause dispatch instead of ending the wave. The fuse fires on a
+# burst of provider failures; the batches already in flight are unaffected and
+# may still be proving, so the wave waits out a cooldown and refills its slots
+# rather than idling them. The 2026-10-04 wave dispatched for 25 minutes,
+# tripped the fuse, then held four idle slots for 11.5 hours.
+#
+# ``rate_limit`` and ``relay_transient`` joined on 2026-10-12. Both used to end
+# dispatch for the rest of the wave, and a wave lasts as long as its longest
+# proof (up to four hours): one 429 at 11:44 left two of four slots idle until
+# 13:59, and one relay "upstream down, retry" 400 at 14:11 idled three slots
+# until the run was stopped. Neither says anything about the work in flight or
+# about the next request, so cooling down and refilling is the right response.
+SOFT_STOP_REASONS = frozenset(
+    {"consecutive_infrastructure_failures", "rate_limit", "relay_transient"}
+)
+FUSE_COOLDOWN_SECONDS = 600.0
+# The relay pauses for concurrency are short; a full fuse cooldown would idle
+# the freed slot far longer than the cap that caused it.
+RELAY_COOLDOWN_SECONDS = 180.0
+RELAY_COOLDOWN_REASONS = frozenset({"rate_limit", "relay_transient"})
+# A per-key 403 that says the key's balance ran out, rather than a request-level
+# or account-level rejection. The 2026-10-05b run stopped an entire wave after
+# 1 accepted batch because one of three pool keys answered
+# "token quota is not enough, token remain quota: 0.058035" on a proofs child:
+# the other two keys served 21 batches normally in the same wave. An `auth`
+# result is a property of the credential the child was bound to, not of the
+# campaign, so it is worth resolving per key before giving up on the run.
+KEY_EXHAUSTED_RE = re.compile(
+    r"quota is not enough|insufficient[ _-]*(?:quota|balance|credit)|"
+    r"余额不足|额度不足|invalid[ _-]*api[ _-]*key|unauthori[sz]ed|"
+    # The provider answers a retired credential with "Invalid token", which none
+    # of the wordings above match. Without this the batch is classified ``auth``
+    # but no key is ever pruned, so the run halts with two healthy keys still in
+    # the pool -- observed on the 2026-10-07 server test, where two of four keys
+    # answered 401 and only the healthy pair could serve work.
+    r"invalid[ _-]*token|authentication[ _-]*error",
+    re.IGNORECASE,
+)
+# Recorded in each wave receipt to describe the per-request budget the run
+# actually used. Lowered from 1800 to 900 on 2026-09-29: doubling it to 3600 on
+# 09-28 changed nothing (still 17 infrastructure failures against 2 accepted,
+# cost up from 32M to 43M per eight hours), so the failures are not a matter of
+# waiting longer. Kept in step with hdp-run's env, which is what the provider
+# client actually reads.
+PER_REQUEST_TIMEOUT_SECONDS = 900
+# Must exceed LEANFLOW_CAMPAIGN_CHILD_TIMEOUT_S in hdp-run (14400s as of
+# 2026-10-03), or the supervisor terminates a child that the runner would still
+# have let finish. Raised from 7200 to 16200 in step with that value.
+CHILD_WATCHDOG_SECONDS = 16200
+
+# A proof action must operate on a real generated declaration.  In particular,
+# an ``import Mathlib`` scaffold is not evidence that a statement was accepted.
+_LEAN_DECLARATION_RE = re.compile(
+    r"(?m)^\s*(?:(?:noncomputable|private|protected|unsafe)\s+)*" r"(?:theorem|lemma|example)\b"
+)
+_LEAN_PLACEHOLDER_RE = re.compile(r"\b(?:sorry|admit)\b")
+sys.path.insert(0, str(SOURCE))
+
+from core.utils import atomic_json_write
+from leanflow_cli.formalization.bounded_statement_refinement import (
+    statement_scope_preflight,
+)
+from leanflow_cli.formalization.campaign_recovery import (
+    capture_proof_snapshot,
+    compile_restored_target,
+    local_runtime_pids,
+    own_warm_probe_pids,
+    reconcile_wave,
+    remote_project_probe_command,
+)
+from leanflow_cli.formalization.corpus_campaign import (
+    build_campaign,
+    lease_campaign_batches,
+    statement_escalation_pending,
+)
+from leanflow_cli.formalization.corpus_campaign_runner import (
+    CampaignAction,
+    _record_campaign_interruption,
+    reconcile_campaign_targets,
+)
+from leanflow_cli.formalization.project_reachability import project_target_reachability
+from leanflow_cli.formalization.statement_artifacts import reconcile_statement_artifacts
+from leanflow_cli.formalization.statement_handoff import prepare_statement_handoff
+from leanflow_cli.lean.lean_parsing import _strip_lean_comments_and_strings
+
+# Budgets must measure wall time, not awake time: ``time.monotonic`` is
+# CLOCK_UPTIME_RAW on macOS and stops while the host sleeps. See the helper's
+# docstring for the measurement that uncovered this.
+from core.time import awake_clock
+
+
+def utc() -> str:
+    return datetime.now(UTC).isoformat(timespec="seconds")
+
+
+def _truthy_env(value: str) -> bool:
+    return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def campaign_snapshots_enabled(env: dict[str, str] | None = None) -> bool:
+    """Return whether this run should record the per-wave campaign snapshots.
+
+    Off by default. Nothing reads the files back, and at ~45MB each, twice per
+    wave, they were 99.4% of a 9.4GB tree while differing between consecutive
+    waves in about 24 of 1030 batches. Operators who want the rollback evidence
+    for a specific investigation can turn them on for that run.
+    """
+    return _truthy_env((env or os.environ).get(CAMPAIGN_SNAPSHOTS_ENV, ""))
+
+
+def key_pool_metadata(env: dict[str, str] | None = None) -> dict[str, object]:
+    """Return credential-pool cardinality and fingerprints without exposing keys."""
+    values = dict(env or os.environ)
+    if not str(values.get("M2F_CODEX_API_KEYS", "") or "").strip():
+        try:
+            from leanflow_cli.config import load_env_file
+
+            values.update(load_env_file())
+        except (OSError, ValueError):
+            pass
+    raw = str(values.get("M2F_CODEX_API_KEYS", "") or "")
+    keys = [item.strip() for item in raw.split(",") if item.strip()]
+    fingerprints = sorted({hashlib.sha256(item.encode()).hexdigest() for item in keys})
+    return {
+        "key_pool_size": len(keys),
+        "key_fingerprint_count": len(fingerprints),
+        "key_fingerprints": fingerprints,
+    }
+
+
+def resolve_key_pool(env: dict[str, str] | None = None) -> list[str]:
+    """Return the configured credential pool as an ordered, deduplicated list.
+
+    Order is the pool order in ``M2F_CODEX_API_KEYS``, because that is what
+    ``HDP_WORKER_SLOT`` indexes into: reordering it would silently rebind every
+    worker to a different credential.
+    """
+    values = dict(env or os.environ)
+    if not str(values.get("M2F_CODEX_API_KEYS", "") or "").strip():
+        try:
+            from leanflow_cli.config import load_env_file
+
+            values.update(load_env_file())
+        except (OSError, ValueError):
+            pass
+    raw = str(values.get("M2F_CODEX_API_KEYS", "") or "")
+    keys: list[str] = []
+    for item in raw.replace("\n", ",").split(","):
+        candidate = item.strip()
+        if candidate and candidate not in keys:
+            keys.append(candidate)
+    return keys
+
+
+def failed_key_fingerprints(items: list[dict]) -> dict[str, str]:
+    """Map credential fingerprint -> a diagnostic for each key that hit its limit.
+
+    Only batches classified ``auth`` whose receipts actually name a key or
+    balance problem count.  A generic 403 (a blocked route, say) says nothing
+    about the credential, and treating it as one would retire a healthy key.
+    """
+    failed: dict[str, str] = {}
+    for item in items:
+        if item.get("classification") != "auth":
+            continue
+        text = " ".join(
+            str(attempt.get(key, "") or "")
+            for attempt in item.get("new_attempts", [])
+            for key in ("failure_class", "reason", "final_diagnostic", "error")
+        )
+        if not KEY_EXHAUSTED_RE.search(text):
+            continue
+        fingerprint = str(item.get("credential_sha256", "") or "")
+        if fingerprint:
+            failed[fingerprint] = text.strip()[:300]
+    return failed
+
+
+def prune_exhausted_keys(
+    env: dict[str, str], items: list[dict]
+) -> tuple[dict[str, str], list[dict[str, object]]]:
+    """Drop credentials that reported exhaustion, keeping the rest of the pool.
+
+    Returns the updated environment and one audit record per pruned key (never
+    the key itself, only its fingerprint).  When every key is gone the original
+    environment is returned unchanged, so the caller still sees an empty pool
+    and stops rather than dispatching into a pool with nothing in it.
+    """
+    failed = failed_key_fingerprints(items)
+    if not failed:
+        return env, []
+    pool = resolve_key_pool(env)
+    if not pool:
+        return env, []
+    survivors = [
+        key for key in pool if hashlib.sha256(key.encode()).hexdigest() not in failed
+    ]
+    if not survivors:
+        return env, []
+    updated = dict(env)
+    updated["M2F_CODEX_API_KEYS"] = ",".join(survivors)
+    # The single-key aliases are what a child falls back to when it has no slot,
+    # so they must name a surviving credential too.
+    for name in ("M2F_CODEX_API_KEY", "LEANFLOW_OPENAI_API_KEY", "OPENAI_API_KEY"):
+        if name in updated:
+            updated[name] = survivors[0]
+    audits = [
+        {
+            "fingerprint": fingerprint,
+            "diagnostic": diagnostic,
+            "pool_before": len(pool),
+            "pool_after": len(survivors),
+        }
+        for fingerprint, diagnostic in sorted(failed.items())
+    ]
+    return updated, audits
+
+
+def no_infrastructure_fuse_setting(cli_enabled: bool) -> tuple[bool, str]:
+    """Resolve the temporary fuse bypass and retain its explicit origin."""
+    env_enabled = _truthy_env(os.environ.get(NO_INFRASTRUCTURE_FUSE_ENV, ""))
+    if cli_enabled and env_enabled:
+        return True, "cli+env"
+    if cli_enabled:
+        return True, "cli"
+    if env_enabled:
+        return True, "env"
+    return False, "default"
+
+
+def digest(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def load(path: Path) -> dict:
+    return json.loads(path.read_bytes())
+
+
+def inspect_proof_target(
+    project: Path,
+    target_file: str,
+    *,
+    root_reachability: dict | None = None,
+    allow_proof_retry: bool = False,
+) -> dict[str, object]:
+    """Classify a generated Lean target before admitting a paid proof action.
+
+    Existence alone is insufficient: old campaigns left tiny ``import Mathlib``
+    scaffolds and stale proof receipts behind.  A candidate must contain an
+    actual declaration, a proof placeholder (or an explicit failed proof retry),
+    and be reachable from the public project root.  This check is deliberately
+    textual; remote Lean remains the authority for proving the resulting file.
+    """
+    root = project.expanduser().resolve()
+    target = (root / str(target_file or "")).resolve()
+    result: dict[str, object] = {
+        "target_file": str(target_file or ""),
+        "target_exists": False,
+        "has_declaration": False,
+        "has_placeholder": False,
+        "explicit_proof_retry": bool(allow_proof_retry),
+        "only_import_shell": False,
+        "root_reachable": None,
+        "eligible": False,
+        "reason": "missing_target",
+    }
+    if not target.is_relative_to(root):
+        result["reason"] = "invalid_target_path"
+        return result
+    if not target.is_file() or target.suffix.lower() != ".lean":
+        return result
+    result["target_exists"] = True
+    try:
+        source = target.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        result["reason"] = "unreadable_target"
+        return result
+    sanitized = _strip_lean_comments_and_strings(source)
+    has_declaration = bool(_LEAN_DECLARATION_RE.search(sanitized))
+    has_placeholder = bool(_LEAN_PLACEHOLDER_RE.search(sanitized))
+    result["has_declaration"] = has_declaration
+    result["has_placeholder"] = has_placeholder
+    result["only_import_shell"] = not has_declaration
+    reachability = root_reachability or project_target_reachability(project, target_file)
+    result["root_reachable"] = reachability.get("root_reachable")
+    root_reachable = reachability.get("root_reachable") is True
+    if not has_declaration:
+        result["reason"] = "empty_import_shell"
+    elif not has_placeholder and not allow_proof_retry:
+        result["reason"] = "no_proof_placeholder"
+    elif not root_reachable:
+        result["reason"] = "root_unreachable"
+    else:
+        result["eligible"] = True
+        result["reason"] = "eligible"
+    return result
+
+
+def summary(campaign: dict) -> dict:
+    """Separate accepted statements, integration receipts, and completed proofs."""
+    batches = campaign.get("batches", [])
+    return {
+        "batches": len(batches),
+        "statement_accepted": sum(
+            any(a.get("stage") == "statements" and a.get("success") for a in b.get("attempts", []))
+            for b in batches
+        ),
+        "root_integrated_statements": sum(
+            any(
+                a.get("stage") == "statements"
+                and a.get("success")
+                and a.get("root_reachable") is True
+                for a in b.get("attempts", [])
+            )
+            for b in batches
+        ),
+        "proofs_completed": sum(
+            b.get("status") in {"completed", "proofs_completed"} for b in batches
+        ),
+        "leases": [b["id"] for b in batches if b.get("lease")],
+        "ledger_spent_usd": campaign.get("spent_usd"),
+        "cost_note": "Unknown pricing is not zero cost; raw provider quota is guarded separately.",
+    }
+
+
+def preview(
+    campaign_path: Path,
+    project: Path,
+    excluded: set[str],
+    limit: int,
+    *,
+    stage: str = "statements",
+    active_stages: tuple[str, ...] = (),
+) -> list[dict]:
+    """Use pure rebuild, reconciliation, and exact lease previews without ledger writes."""
+    if stage == "mixed":
+        selected = []
+        occupied = list(active_stages)
+        used = set(excluded)
+        pools = {
+            lane: preview(campaign_path, project, used, limit, stage=lane)
+            for lane in ("proofs", "statements")
+        }
+        while len(selected) < limit:
+            lanes = sorted(pools, key=lambda lane: occupied.count(lane))
+            for lane in lanes:
+                pools[lane] = [row for row in pools[lane] if row["batch_id"] not in used]
+                if pools[lane]:
+                    item = pools[lane].pop(0)
+                    selected.append(item)
+                    occupied.append(lane)
+                    used.add(item["batch_id"])
+                    break
+            else:
+                break
+        return selected
+    current = load(campaign_path)
+    manifest = campaign_path.with_name("book-manifest.json")
+    current = build_campaign(load(manifest), existing=current) if manifest.is_file() else current
+    current, _ = reconcile_campaign_targets(current, project_root=project)
+    current, _ = reconcile_statement_artifacts(current, project)
+    packets = {}
+    candidates = []
+    eligible_statuses = (
+        {"pending", "statement_retry"}
+        if stage == "statements"
+        else {"statements_completed", "proof_retry"}
+    )
+    for batch in current["batches"]:
+        if batch["id"] in excluded or statement_escalation_pending(batch):
+            continue
+        if batch.get("agent_status", batch.get("status")) not in eligible_statuses:
+            continue
+        target_file = ""
+        target_check = {}
+        if stage == "proofs":
+            proof_retry_semantics = batch.get(
+                "agent_status", batch.get("status")
+            ) == "proof_retry" and any(
+                isinstance(attempt, dict)
+                and attempt.get("stage") == "proofs"
+                and attempt.get("success") is False
+                and not attempt.get("reconciled_stale")
+                for attempt in batch.get("attempts", [])
+            )
+            target_file = str(
+                dict(batch.get("last_outcome", {}) or {}).get("target_file", "") or ""
+            ).strip()
+            if not target_file:
+                continue
+            target = (project / target_file).resolve()
+            if not target.is_relative_to(project) or not target.is_file():
+                continue
+            # Reject empty scaffolds and completed files before the relatively
+            # expensive project-wide import-closure scan.
+            target_check = inspect_proof_target(
+                project,
+                target_file,
+                root_reachability={"root_reachable": None},
+                allow_proof_retry=proof_retry_semantics,
+            )
+            if not target_check["has_declaration"] or (
+                not target_check["has_placeholder"] and not proof_retry_semantics
+            ):
+                continue
+            reachability = project_target_reachability(project, target_file)
+            target_check = inspect_proof_target(
+                project,
+                target_file,
+                root_reachability=reachability,
+                allow_proof_retry=proof_retry_semantics,
+            )
+            if not target_check["eligible"]:
+                continue
+        else:
+            reachability = {}
+        labels = batch.get("labels", [])
+        if len(labels) != 1:
+            continue
+        item = {}
+        path = project
+        if stage == "statements":
+            path = (project / (batch.get("source_file") or current.get("source", ""))).resolve()
+            if not path.is_relative_to(project) or not path.is_file() or path.suffix != ".json":
+                continue
+            if path not in packets:
+                data = load(path)
+                rows = data.get("questions", []) if isinstance(data, dict) else data
+                if not isinstance(rows, list):
+                    continue
+                indexed = {}
+                for row in rows:
+                    if isinstance(row, dict):
+                        indexed.setdefault(str(row.get("label", "")), []).append(row)
+                packets[path] = (indexed, digest(path.read_bytes()))
+            matches = packets[path][0].get(str(labels[0]), [])
+            if len(matches) != 1:
+                continue
+            item = matches[0]
+            statement = str(item.get("question", item.get("statement", "")) or "").strip()
+            if not statement or statement_scope_preflight(
+                statement, kind=str(item.get("kind", ""))
+            ):
+                continue
+        else:
+            statement = target_file
+        attempts = [a for a in batch.get("attempts", []) if a.get("stage") == "statements"]
+        candidates.append(
+            (
+                len(attempts),
+                len(statement),
+                batch["id"],
+                path,
+                statement,
+                batch,
+                target_file,
+                reachability,
+                target_check,
+            )
+        )
+    selected = []
+    for (
+        _,
+        _,
+        batch_id,
+        path,
+        statement,
+        batch,
+        target_file,
+        reachability,
+        target_check,
+    ) in sorted(candidates, key=lambda value: value[:3]):
+        proposed, leased = lease_campaign_batches(
+            current,
+            stage=stage,
+            worker_ids=[f"preview-{len(selected)}"],
+            batch_id=batch_id,
+        )
+        if not leased:
+            continue
+        current = proposed
+        selected.append(
+            {
+                "batch_id": batch_id,
+                "source_file": str(path.relative_to(project)),
+                "source_sha256": packets[path][1] if stage == "statements" else "",
+                "statement_sha256": digest(statement.encode()),
+                "statement_preview": statement[:240],
+                "complexity": batch.get("source_complexity_tier", "routine"),
+                "attempts_before": len(batch.get("attempts", [])),
+                "dependencies": batch.get("dependency_labels", []),
+                "stage": stage,
+                "target_file": target_file,
+                "root_reachability": reachability,
+                **({"target_check": target_check} if stage == "proofs" else {}),
+            }
+        )
+        if len(selected) >= limit:
+            break
+    return selected
+
+
+def command(campaign: Path, batch_id: str, *, stage: str = "statements") -> list[str]:
+    base = [
+        str(LAUNCHER),
+        "--campaign",
+        str(campaign),
+        "--execute",
+        "--stage",
+        stage,
+        "--batch-id",
+        batch_id,
+        "--workers",
+        "1",
+        "--lean-slots",
+        "1",
+        "--reserve-usd",
+        "2",
+    ]
+    if stage == "statements":
+        base.extend(
+            (
+                "--bounded-statements",
+                "--statement-candidates",
+                "1",
+                "--statement-candidate-workers",
+                "1",
+            )
+        )
+    return base
+
+
+def failure_kind(attempts: list[dict], exit_code: int) -> str:
+    """Classify only new receipts, keeping missing receipts an infrastructure error."""
+    if not attempts:
+        return "infrastructure"
+    fields = " ".join(
+        str(a.get(k, ""))
+        for a in attempts
+        for k in (
+            "failure_class",
+            "reason",
+            "final_diagnostic",
+            "error",
+            "failure_stage",
+        )
+    ).lower()
+    if re.search(
+        r"\b(401|403)\b|invalid.api.key|authentication|unauthorized|access denied",
+        fields,
+    ):
+        return "auth"
+    if re.search(r"quota|insufficient.credit|余额不足|额度不足|insufficient.balance", fields):
+        return "quota"
+    if re.search(r"\b429\b|rate.?limit|too.many.requests|gateway_concurrency_limit", fields):
+        return "rate_limit"
+    # The relay's own "upstream down, retry" failures (a 400 with type
+    # upstream_error, or 5xx with the same message). Separate from
+    # ``infrastructure`` so a proof hit by one pauses dispatch briefly instead of
+    # forcing task recovery, which drains the whole wave.
+    if re.search(r"upstream_error|请稍后重试|重新发起请求|retry shortly", fields):
+        return "relay_transient"
+    if any(
+        a.get("infrastructure_failure")
+        or a.get("retry_class") == "infrastructure"
+        or a.get("failure_class") in {"infrastructure", "transport", "provider_unavailable"}
+        for a in attempts
+    ):
+        return "infrastructure"
+    if exit_code == 0 and attempts[-1].get("success"):
+        return "accepted"
+    if any(
+        a.get("review_decision") == "BLOCK"
+        or a.get("retry_class") == "semantic"
+        or a.get("failure_class") in {"semantic_review_block", "statement_generation_incomplete"}
+        or a.get("failure_stage")
+        in {"semantic_review", "semantic_contract", "lean_compilation", "format_check"}
+        for a in attempts
+    ):
+        return "semantic"
+    return "infrastructure"
+
+
+def item_receipts(item: dict, batch: dict) -> list[dict]:
+    """Match fresh receipts to this child's emitted worker identity and stage."""
+    text = Path(item["log"]).read_text(errors="replace")[-2_000_000:]
+    decoder = json.JSONDecoder()
+    owner = str(item.get("observed_worker_id", "") or "")
+    stage = str(item.get("stage", "statements") or "statements")
+    # The child records the fingerprint of the credential it actually resolved,
+    # so an auth failure can be attributed to a pool member without recomputing
+    # hdp-run's slot arithmetic here (which would drift if that rule changed).
+    credential = re.search(r'"credential_sha256":\s*"([a-f0-9]{64})"', text)
+    if credential:
+        item["credential_sha256"] = credential.group(1)
+    for start in re.finditer(r"(?m)^\{", text):
+        try:
+            payload, _ = decoder.raw_decode(text[start.start() :])
+        except ValueError:
+            continue
+        if payload.get("batch_id") == item["batch_id"] and payload.get("stage") == stage:
+            candidate = str(
+                payload.get("worker_id") or payload.get("outcome", {}).get("worker_id", "") or ""
+            )
+            if candidate:
+                owner = candidate
+                item["child_result"] = {
+                    k: payload.get(k)
+                    for k in ("batch_id", "stage", "worker_id", "exit_code", "success")
+                }
+    if not owner:
+        return []
+    item["worker_id"] = owner
+    return [
+        a
+        for a in batch.get("attempts", [])[item["attempts_before"] :]
+        if a.get("worker_id") == owner and a.get("stage") == stage
+    ]
+
+
+def _file_digest(path: str | Path) -> str | None:
+    """Return a file digest for recovery reconciliation, or ``None`` if absent."""
+    candidate = Path(path)
+    try:
+        if not candidate.is_file():
+            return None
+        return digest(candidate.read_bytes())
+    except (OSError, ValueError):
+        return None
+
+
+def recovery_snapshot(target_path: str) -> dict | None:
+    """Hash the assigned Lean directory; unreadable or absent targets cannot recover."""
+    target = Path(target_path)
+    if not target_path or not target.is_file():
+        return None
+    try:
+        return {str(p): digest(p.read_bytes()) for p in sorted(target.parent.rglob("*.lean"))}
+    except OSError:
+        return None
+
+
+def recovery_runtime_idle(*, run=subprocess.run) -> dict:
+    """Check both hosts after draining; uncertainty never authorizes a restart.
+
+    When the orchestrator runs on the Lean host itself there is no second host to
+    ask. The SSH probe below would then be a connection to ourselves, and since
+    self-login is not authorized on this box it would fail, the exception handler
+    would report ``checked: False``, and every restart would be refused forever.
+    On a single host one process table answers both questions, so scan it once.
+    """
+    single_host = str(os.getenv("HDP_LOCAL_LEAN_HOST", "") or "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+    if single_host:
+        try:
+            local = run(
+                ["ps", "-axo", "pid=,command="],
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=15,
+            ).stdout
+            busy_pids = local_runtime_pids(local)
+            # The orchestrator's own warm probe is expected to be alive here --
+            # it is started before dispatch and answers the verification lane's
+            # checks. Counting it as a busy runtime made every restart refuse
+            # itself: the probe was running, so `execute` raised
+            # "statement handoff requires idle local and remote runtimes" and the
+            # run died seconds after starting. Exclude only the service the
+            # parent owns; a *different* probe still counts, because that is a
+            # second orchestrator and the guard exists to catch exactly that.
+            own_probe = own_warm_probe_pids(local)
+            busy_pids = [pid for pid in busy_pids if pid not in own_probe]
+            idle = not busy_pids
+            return {
+                "checked": True,
+                "local_idle": idle,
+                "local_busy_pids": busy_pids,
+                "own_warm_probe_pids": own_probe,
+                "remote_idle": idle,
+                "single_host": True,
+            }
+        except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+            return {"checked": False, "local_idle": False, "remote_idle": False}
+    try:
+        local = run(
+            ["ps", "-axo", "pid=,command="],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=15,
+        ).stdout
+        busy_pids = local_runtime_pids(local)
+        local_busy = bool(busy_pids)
+        remote = run(
+            [
+                "ssh",
+                "-p",
+                "22",
+                "-o",
+                "BatchMode=yes",
+                "-o",
+                "ConnectTimeout=10",
+                "lean@lean-host.example",
+                remote_project_probe_command("/srv/lean/fate-x-work"),
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=20,
+        ).stdout
+        remote_state = json.loads(remote)
+        if remote_state.get("checked") is not True:
+            raise ValueError("remote process scope could not be checked")
+        remote_busy = bool(remote_state["busy_pids"])
+        return {
+            "checked": True,
+            "local_idle": not local_busy,
+            "local_busy_pids": busy_pids,
+            "remote_idle": not remote_busy,
+        }
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+        return {"checked": False, "local_idle": False, "remote_idle": False}
+
+
+def _missing_receipt_recovery(item: dict, batch: dict, exit_code: int) -> dict:
+    """Defer an exhausted proof only with positive source, ledger and runtime evidence.
+
+    Console rollback messages alone carry no authority. No success receipt is
+    synthesized and the failed item is excluded for the rest of this run.
+    """
+    result = item.get("child_result", {})
+    runtime = item.get("recovery_runtime", {})
+    before = item.get("recovery_source_before")
+    after = recovery_snapshot(str(item.get("target_path", "")))
+    attempts = batch.get("attempts", [])
+    ledger_unchanged = item.get("attempts_before_sha256") == digest(
+        json.dumps(attempts, sort_keys=True).encode()
+    )
+    target_unchanged = bool(before and before == after)
+    child_timeout = (
+        item.get("stage") == "proofs"
+        and result.get("stage") == "proofs"
+        and result.get("batch_id") == item.get("batch_id")
+        and bool(item.get("worker_id"))
+        and result.get("worker_id") == item.get("worker_id")
+        and result.get("exit_code") == 124
+        and result.get("success") is False
+    )
+    idle = all(runtime.get(k) is True for k in ("checked", "local_idle", "remote_idle"))
+    safe = bool(
+        child_timeout
+        and exit_code == 1
+        and not batch.get("lease")
+        and ledger_unchanged
+        and target_unchanged
+        and idle
+    )
+    return {
+        "kind": "action_timeout" if child_timeout else "unknown_missing_receipt",
+        "lease_released": not bool(batch.get("lease")),
+        "target_unchanged": target_unchanged,
+        "attempts_unchanged": ledger_unchanged,
+        "runtime": runtime,
+        "safe_to_retry": safe,
+        "disposition": "defer_for_this_run" if safe else "manual_reconciliation",
+        "manual_reconciliation_required": not safe,
+    }
+
+
+def reconcile_missing_receipts(state: dict, campaign: Path, *, check=None) -> None:
+    """Recheck missing outcomes after all workers drain, before any quota rollover."""
+    missing = [i for i in state["items"] if not i.get("new_attempts")]
+    if not missing or state.get("active"):
+        return
+    runtime = (check or recovery_runtime_idle)()
+    batches = {b["id"]: b for b in load(campaign)["batches"]}
+    for item in missing:
+        item["recovery_runtime"] = runtime
+        item["receipt_recovery"] = _missing_receipt_recovery(
+            item, batches.get(item["batch_id"], {}), item["exit_code"]
+        )
+
+
+@contextmanager
+def controller_lock(project: Path):
+    """Admit one supervising controller for the shared Lean checkout."""
+    path = project / ".leanflow" / "scale-controller.lock"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a+") as handle:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise RuntimeError("another HDP scale controller is running") from exc
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
+
+
+def source_hashes() -> dict[str, str]:
+    files = [
+        WORKSPACE / "hdp-scale",
+        WORKSPACE / "hdp-long-run",
+        LAUNCHER,
+        SOURCE / "core/project_lean_capacity.py",
+        SOURCE / "leanflow_cli/formalization/campaign_recovery.py",
+        SOURCE / "leanflow_cli/formalization/proof_plan_recovery.py",
+        SOURCE / "leanflow_cli/formalization/proof_source_review.py",
+        SOURCE / "leanflow_cli/workflows/dispatch_service.py",
+        SOURCE / "leanflow_cli/workflows/research_findings.py",
+        SOURCE / "leanflow_cli/workflows/research_portfolio.py",
+        SOURCE / "leanflow_cli/workflows/target_handoff.py",
+        SOURCE / "leanflow_cli/formalization/campaign_supervision.py",
+        SOURCE / "leanflow_cli/formalization/statement_artifacts.py",
+        SOURCE / "leanflow_cli/formalization/statement_handoff.py",
+        SOURCE / "agent/accounting/provider_quota.py",
+        SOURCE / "agent/accounting/provider_quota_budget.py",
+        SOURCE / "agent/accounting/provider_quota_call.py",
+        SOURCE / "agent/providers/api_caller.py",
+        SOURCE / "agent/providers/auxiliary_client.py",
+        SOURCE / "leanflow_cli/workflows/workflow_state_paths.py",
+        SOURCE / "leanflow_cli/workflows/campaign_epoch.py",
+        SOURCE / "leanflow_cli/formalization/corpus_campaign_runner.py",
+        SOURCE / "leanflow_cli/formalization/bounded_statement_refinement.py",
+        SOURCE / "leanflow_cli/workflows/verification_providers.py",
+        SOURCE / "remote-bin/lake",
+        SOURCE / "leanflow_cli/formalization/remote_warm_probe.py",
+    ]
+    return {str(path): digest(path.read_bytes()) for path in files if path.is_file()}
+
+
+def verified_quote_snapshot(path: Path) -> tuple[bytes, dict]:
+    """Validate the exact quote bytes and the current HDP reservation policy."""
+    from agent.accounting.provider_quota import ProviderQuotaError, ProviderQuotaQuote
+
+    try:
+        contents = path.read_bytes()
+        payload = json.loads(contents)
+    except (OSError, ValueError) as exc:
+        raise ProviderQuotaError("provider quota quote is missing or invalid") from exc
+    if not isinstance(payload, dict):
+        raise ProviderQuotaError("provider quota quote must be a JSON object")
+    quote = ProviderQuotaQuote.from_mapping(payload)
+    if (quote.base_url, quote.model) != (PINNED_PROVIDER_BASE_URL, PINNED_PROVIDER_MODEL):
+        raise RuntimeError(
+            "quota quote must match the fixed HDP provider and model "
+            f"({PINNED_PROVIDER_BASE_URL}, {PINNED_PROVIDER_MODEL}); "
+            f"got ({quote.base_url}, {quote.model})"
+        )
+    if not Path(quote.evidence_path).is_file():
+        raise RuntimeError("quota quote needs local provider evidence")
+    for name in ("provider_input_allowance_tokens", "provider_output_allowance_tokens"):
+        if name not in payload or getattr(quote, name) < MIN_PROVIDER_ALLOWANCE_TOKENS:
+            raise ProviderQuotaError(
+                f"quota quote requires explicit {name} >= {MIN_PROVIDER_ALLOWANCE_TOKENS}; "
+                "use the current verified quote instead of an outdated run snapshot"
+            )
+    return contents, {
+        "sha256": digest(contents),
+        "base_url": quote.base_url,
+        "model": quote.model,
+        "pricing_version": quote.pricing_version,
+        "provider_input_allowance_tokens": quote.provider_input_allowance_tokens,
+        "provider_output_allowance_tokens": quote.provider_output_allowance_tokens,
+    }
+
+
+def minimum_request_quota(path: Path) -> int:
+    """Compute the provider allowance floor without making or reserving a request."""
+    from agent.accounting.provider_quota import ProviderQuotaQuote
+
+    raw, _metadata = verified_quote_snapshot(path)
+    quote = ProviderQuotaQuote.from_mapping(json.loads(raw))
+    return quote.estimate_quota(
+        base_url=quote.base_url,
+        model=quote.model,
+        group=quote.group,
+        prompt_tokens=max(768, quote.provider_input_allowance_tokens),
+        completion_tokens=max(1, quote.provider_output_allowance_tokens),
+    )
+
+
+def quota_environment(options, run_dir: Path) -> dict[str, str]:
+    """Require verified raw-quota accounting before admitting paid child processes."""
+    # The provider module owns validation, request reservations, and reconciliation.
+    # This import stays out of dry-run planning, which never contacts a provider.
+    from agent.accounting.provider_quota_budget import (
+        initialize_quota_budget,
+        read_quota_budget,
+    )
+
+    contents, _metadata = verified_quote_snapshot(options.quote)
+    snapshot = run_dir / "quota-quote.json"
+    snapshot.write_bytes(contents)
+    # The budget is deliberately outside the per-run directory so every
+    # controller wave shares one cumulative provider-quota ledger.  Operators
+    # may override this path for an explicitly isolated campaign.
+    budget = getattr(options, "quota_budget", None)
+    if budget is None:
+        budget = options.project / ".leanflow" / "scale-budget.json"
+    budget = Path(budget).expanduser().resolve()
+    initialize_quota_budget(budget, limit_quota=options.quota_limit)
+    state = read_quota_budget(
+        budget,
+        ignore_unknown_holds=bool(getattr(options, "ignore_unknown_holds", False)),
+    )
+    if state.get("halt_reason"):
+        raise RuntimeError(
+            "quota budget is halted; reconcile it before starting another wave: "
+            + str(state["halt_reason"])
+        )
+    return {
+        "LEANFLOW_PROVIDER_QUOTA_BUDGET_PATH": str(budget),
+        "LEANFLOW_PROVIDER_QUOTA_QUOTE_PATH": str(snapshot),
+        "LEANFLOW_PROVIDER_AUDIT_PATH": str(run_dir / "provider-audit.jsonl"),
+        "LEANFLOW_AUXILIARY_RETRY_COUNT": "0",
+        "LEANFLOW_AUXILIARY_TIMEOUT_RETRY_COUNT": "0",
+        IGNORE_UNKNOWN_HOLDS_ENV: ("1" if getattr(options, "ignore_unknown_holds", False) else "0"),
+    }
+
+
+def quota_quote_status(options, env: dict) -> dict:
+    """Record the quote snapshot that paid children will actually consume."""
+    snapshot = Path(env["LEANFLOW_PROVIDER_QUOTA_QUOTE_PATH"])
+    _contents, metadata = verified_quote_snapshot(snapshot)
+    return {
+        "source_path": str(options.quote.expanduser().resolve()),
+        "snapshot_path": str(snapshot),
+        **metadata,
+    }
+
+
+def quota_status(env: dict) -> dict:
+    from agent.accounting.provider_quota_budget import read_quota_budget
+
+    ignore_unknown = _truthy_env(env.get(IGNORE_UNKNOWN_HOLDS_ENV, ""))
+    state = read_quota_budget(
+        env["LEANFLOW_PROVIDER_QUOTA_BUDGET_PATH"],
+        ignore_unknown_holds=ignore_unknown,
+    )
+    return {
+        key: state.get(key)
+        for key in (
+            "unit",
+            "limit_quota",
+            "charges_quota",
+            "held_quota",
+            "remaining_quota",
+            "halt_reason",
+            "unknown_hold_quota",
+            "effective_held_quota",
+            "quota_accounting_mode",
+        )
+    }
+
+
+def import_halted_quota_budget(source: Path, destination: Path) -> dict:
+    """Copy a halted budget for an explicitly acknowledged new controller wave.
+
+    The source is never modified.  Clearing ``halt_reason`` is intentionally
+    available only through this explicit offline command and acknowledgement;
+    all charges, holds, and request reservations remain part of the imported
+    ledger.
+    """
+    from agent.accounting.provider_quota_budget import read_quota_budget
+
+    source = source.expanduser().resolve()
+    destination = destination.expanduser().resolve()
+    if source == destination:
+        raise RuntimeError("quota budget import requires distinct source and destination")
+    if destination.exists():
+        raise RuntimeError("quota budget destination already exists")
+    state = read_quota_budget(source)
+    halt = str(state.get("halt_reason", "") or "")
+    if not halt:
+        raise RuntimeError("source quota budget is not halted; import is only for halted budgets")
+    source_sha = digest(source.read_bytes())
+    state.pop("halt_reason", None)
+    state["imported_from"] = str(source)
+    state["imported_from_sha256"] = source_sha
+    state["import_acknowledged_at"] = utc()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    atomic_json_write(destination, state)
+    return read_quota_budget(destination)
+
+
+def _operator_authorized_at(value: str) -> str:
+    """Validate an operator authorization time before it enters the ledger."""
+    try:
+        authorized_at = datetime.fromisoformat(str(value or "").strip())
+    except ValueError as exc:
+        raise ValueError("operator authorization time must be ISO-8601 with timezone") from exc
+    if authorized_at.tzinfo is None:
+        raise ValueError("operator authorization time must include a timezone")
+    normalized = authorized_at.astimezone(UTC)
+    if normalized > datetime.now(UTC) + timedelta(minutes=5):
+        raise ValueError("operator authorization time cannot be in the future")
+    return normalized.isoformat()
+
+
+def isolated_budget_source_summary(state: dict) -> dict:
+    """Summarize an immutable prior ledger without copying its reservations."""
+    reservations = state.get("reservations", {})
+    statuses: dict[str, int] = {}
+    unknown_hold_quota = 0
+    if isinstance(reservations, dict):
+        for item in reservations.values():
+            if not isinstance(item, dict):
+                continue
+            status = str(item.get("status", ""))
+            statuses[status] = statuses.get(status, 0) + 1
+            if status == "unknown":
+                unknown_hold_quota += int(item.get("reserved_quota", 0) or 0)
+    return {
+        "limit_quota": state["limit_quota"],
+        "charges_quota": state["charges_quota"],
+        "held_quota": state["held_quota"],
+        "remaining_quota": state["remaining_quota"],
+        "halt_reason": str(state.get("halt_reason", "") or ""),
+        "reservation_status_counts": statuses,
+        "unknown_hold_quota": unknown_hold_quota,
+    }
+
+
+def create_isolated_operator_budget(
+    source: Path,
+    destination: Path,
+    *,
+    limit_quota: int,
+    authorization_ref: str,
+    authorized_at: str,
+    quote_metadata: dict,
+) -> dict:
+    """Create a new wave ledger linked to, but never derived from, wave3.
+
+    New provider capacity is an operator-authorized raw-quota allocation.  The
+    historical ledger remains immutable: its charges and unresolved holds are
+    recorded as linkage evidence rather than copied into the new capacity.
+    """
+    from agent.accounting.provider_quota_budget import read_quota_budget
+
+    source = source.expanduser().resolve()
+    destination = destination.expanduser().resolve()
+    if source == destination:
+        raise RuntimeError("isolated budget must not replace its source ledger")
+    if destination.exists():
+        raise RuntimeError("isolated budget destination already exists")
+    if isinstance(limit_quota, bool) or not isinstance(limit_quota, int) or limit_quota <= 0:
+        raise ValueError("isolated raw provider quota limit must be positive")
+    reference = str(authorization_ref or "").strip()
+    if not reference or len(reference) > 256:
+        raise ValueError("operator authorization reference must be 1-256 characters")
+    source_state = read_quota_budget(source)
+    source_bytes = source.read_bytes()
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    record = {
+        "version": 1,
+        "unit": "provider_quota",
+        "limit_quota": limit_quota,
+        "charges_quota": 0,
+        "reservations": {},
+        "created_at": utc(),
+        "operator_authorization": {
+            "reference": reference,
+            "authorized_at_utc": _operator_authorized_at(authorized_at),
+            "raw_quota_limit_source": "operator_authorized_new_provider_quota",
+        },
+        "isolated_from": {
+            "wave": source.stem.removesuffix("-scale-budget") or source.stem,
+            "source_path": str(source),
+            "source_sha256": digest(source_bytes),
+            "source_summary": isolated_budget_source_summary(source_state),
+        },
+        "provider_quota_evidence": dict(quote_metadata),
+    }
+    atomic_json_write(destination, record)
+    return read_quota_budget(destination)
+
+
+def compile_handoff_root(root: Path, project: Path) -> dict:
+    """Build the public entry point on the Lean host, retaining bounded diagnostics."""
+    try:
+        result = subprocess.run(
+            [str(SOURCE / "remote-bin/lake"), "build", root.stem],
+            check=False,
+            cwd=project,
+            capture_output=True,
+            text=True,
+            timeout=600,
+        )
+        readable = "\n".join(
+            line
+            for line in (result.stdout + result.stderr).splitlines()
+            if not line.startswith("LEANFLOW_REMOTE_COMPILE_RECEIPT_JSON=")
+        )
+        return {
+            "success": result.returncode == 0,
+            "exit_code": result.returncode,
+            "diagnostic": readable[-6000:],
+        }
+    except subprocess.TimeoutExpired:
+        return {"success": False, "reason": "remote_root_build_timeout"}
+
+
+def execute(options, *, popen=subprocess.Popen, clock=awake_clock, pause=time.sleep) -> dict:
+    """Fill bounded worker slots, then drain on limits or infrastructure failures."""
+    project, campaign = options.project, options.campaign
+    with controller_lock(project):
+        handoff = {}
+        if getattr(options, "handoff_limit", 0):
+            runtime = recovery_runtime_idle()
+            if not all(runtime.get(k) is True for k in ("checked", "local_idle", "remote_idle")):
+                raise RuntimeError("statement handoff requires idle local and remote runtimes")
+            handoff = prepare_statement_handoff(
+                campaign,
+                project,
+                compile_root=lambda root: compile_handoff_root(root, project),
+                excluded=set(getattr(options, "excluded_batches", ())),
+                limit=options.handoff_limit,
+            )
+        run_dir = (
+            project / ".leanflow" / "scale-runs" / datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+        )
+        run_dir.mkdir(parents=True, exist_ok=False)
+        before = campaign.read_bytes()
+        # The before/after pair is ~45MB each and nothing reads it back: the only
+        # consumers are an operator-facing report and a test that asserts the
+        # files exist. Across 126 run dirs that is ~9.4GB, i.e. 99.4% of the
+        # scale-runs tree, holding nearly identical content (consecutive waves
+        # differ in ~24 of 1030 batches). Write it only when asked, so the
+        # rollback evidence stays available without paying for it every wave.
+        if campaign_snapshots_enabled():
+            (run_dir / "campaign-before.json").write_bytes(before)
+        env = {**os.environ, **quota_environment(options, run_dir)}
+        effective_quota = quota_status(env)
+        effective_quote = (
+            quota_quote_status(options, env)
+            if env.get("LEANFLOW_PROVIDER_QUOTA_QUOTE_PATH")
+            else {}
+        )
+        baseline = summary(json.loads(before))
+        hashes = source_hashes()
+        no_infrastructure_fuse = bool(getattr(options, "no_infrastructure_fuse", False))
+        fuse_source = str(getattr(options, "no_infrastructure_fuse_source", "") or "") or (
+            "explicit_option" if no_infrastructure_fuse else "default"
+        )
+        state = {
+            "statement_handoff": handoff,
+            "run_dir": str(run_dir),
+            "continuous": bool(getattr(options, "continuous", False)),
+            "started_at": utc(),
+            "controller_pid": os.getpid(),
+            "workers": options.workers,
+            "stage": getattr(options, "stage", "statements"),
+            **key_pool_metadata(env),
+            "lean_slots": 1,
+            "max_items": options.max_items,
+            "max_wall_minutes": options.max_wall,
+            "per_request_timeout_seconds": PER_REQUEST_TIMEOUT_SECONDS,
+            "quota_limit_raw": effective_quota.get("limit_quota", options.quota_limit),
+            "quota_budget_path": env.get("LEANFLOW_PROVIDER_QUOTA_BUDGET_PATH", ""),
+            "quota_quote": effective_quote,
+            "quota_before": dict(effective_quota),
+            "quota": effective_quota,
+            "source_sha256": hashes,
+            "campaign_before_sha256": digest(before),
+            "before": baseline,
+            "items": [],
+            "active": {},
+            "stop_reason": "",
+            "no_infrastructure_fuse": no_infrastructure_fuse,
+            "no_infrastructure_fuse_source": fuse_source,
+            "infrastructure_fuse_threshold": INFRASTRUCTURE_FUSE_THRESHOLD,
+            "ignore_unknown_holds": bool(getattr(options, "ignore_unknown_holds", False)),
+            "quota_accounting_mode": (
+                "success_only"
+                if getattr(options, "ignore_unknown_holds", False)
+                else "conservative"
+            ),
+            "infrastructure_failure_streak": 0,
+        }
+        active = {}
+        seen = set()
+        started = clock()
+        heartbeat_at = started - 30
+        infra_streak = 0
+
+        def event(kind: str, **fields):
+            record = {"utc": utc(), "event": kind, **fields}
+            with (run_dir / "events.jsonl").open("a") as handle:
+                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+            state["active"] = {key: value[0].pid for key, value in active.items()}
+            atomic_json_write(run_dir / "run.json", state)
+            print(json.dumps(record, ensure_ascii=False), flush=True)
+
+        def stop(reason: str):
+            """Record a stop. Soft reasons pause dispatch; hard reasons drain and exit.
+
+            The fuse fires on a burst of provider failures, but the batches
+            already in flight may still be proving. Treating it as a terminal
+            stop leaves their slots idle for as long as they run: the
+            2026-10-04 wave dispatched for 25 minutes, tripped the fuse, and
+            then sat with four idle slots for 11.5 hours. Pausing and resuming
+            keeps those slots working without ignoring the failure burst.
+            """
+            nonlocal infra_streak
+            if state["stop_reason"]:
+                return
+            if reason in SOFT_STOP_REASONS:
+                cooldown = (
+                    RELAY_COOLDOWN_SECONDS
+                    if reason in RELAY_COOLDOWN_REASONS
+                    else FUSE_COOLDOWN_SECONDS
+                )
+                infra_streak = 0
+                state["infrastructure_failure_streak"] = 0
+                state["dispatch_pause_reason"] = reason
+                # Never shorten a pause already in force: a 429 arriving during
+                # a fuse cooldown must not cut that cooldown short.
+                state["dispatch_paused_until"] = max(
+                    float(state.get("dispatch_paused_until") or 0), clock() + cooldown
+                )
+                event("dispatch_paused", reason=reason, resume_in_seconds=cooldown)
+                return
+            state["stop_reason"] = reason
+            event("stop_dispatch", reason=reason)
+
+        def on_signal(signum, _frame):
+            stop(f"signal_{signum}")
+
+        old_signals = {
+            sig: signal.signal(sig, on_signal) for sig in (signal.SIGINT, signal.SIGTERM)
+        }
+        event(
+            "started",
+            directory=str(run_dir),
+            no_infrastructure_fuse=no_infrastructure_fuse,
+            no_infrastructure_fuse_source=fuse_source,
+            infrastructure_fuse_enabled=not no_infrastructure_fuse,
+            infrastructure_fuse_threshold=INFRASTRUCTURE_FUSE_THRESHOLD,
+            ignore_unknown_holds=bool(getattr(options, "ignore_unknown_holds", False)),
+            quota_accounting_mode=state["quota"].get("quota_accounting_mode", "conservative"),
+            unknown_hold_quota=state["quota"].get("unknown_hold_quota", 0),
+            per_request_timeout_seconds=PER_REQUEST_TIMEOUT_SECONDS,
+            **baseline,
+        )
+        callback = getattr(options, "on_wave_created", None)
+        if callback is not None:
+            callback(run_dir / "run.json")
+        try:
+            while True:
+                for batch_id, (process, item) in list(active.items()):
+                    exit_code = process.poll()
+                    if (
+                        exit_code is None
+                        and clock() - item.get("watchdog_started", clock()) > CHILD_WATCHDOG_SECONDS
+                    ):
+                        # Bound the entire child, including statement pipelines and
+                        # finalization. Only this spawned session may be terminated.
+                        from tools.utilities.process_tree import terminate_process_tree
+
+                        terminate_process_tree(
+                            process.pid,
+                            expected_session_id=process.pid,
+                            term_grace_s=10,
+                            kill_grace_s=2,
+                        )
+                        exit_code = process.poll()
+                        # Never record this as a clean watchdog kill without
+                        # evidence. terminate_process_tree suppresses every
+                        # signal error (process_tree.py:175-181) and returns the
+                        # pid set it *selected*, not proof anything died, so a
+                        # child that survived the SIGKILL would otherwise be
+                        # logged as ``watchdog_timeout: True`` with a live pid
+                        # and left holding the branch.
+                        if exit_code is None:
+                            item["watchdog_timeout"] = False
+                            item["watchdog_kill_survived"] = True
+                            stop("watchdog_kill_failed")
+                        else:
+                            item["watchdog_timeout"] = True
+                    if exit_code is None:
+                        if not item.get("worker_id"):
+                            observed = next(
+                                (b for b in load(campaign)["batches"] if b["id"] == batch_id),
+                                {},
+                            )
+                            lease = observed.get("lease", {})
+                            if lease.get("worker_id"):
+                                item["worker_id"] = str(lease["worker_id"])
+                                item["observed_worker_id"] = item["worker_id"]
+                        continue
+                    current = load(campaign)
+                    batch = next((b for b in current["batches"] if b["id"] == batch_id), {})
+                    attempts = item_receipts(item, batch)
+                    # A directly killed child can exit before the campaign
+                    # runner's Python finally block writes its outcome. Recover
+                    # the still-owned lease here so the next retry sees an
+                    # explicit aborted/inflight infrastructure attempt.
+                    if exit_code is not None and exit_code < 0 and not attempts:
+                        lease = batch.get("lease") if isinstance(batch, dict) else None
+                        worker_id = (
+                            str(lease.get("worker_id", "") or "") if isinstance(lease, dict) else ""
+                        )
+                        if worker_id:
+                            item["worker_id"] = worker_id
+                            item["observed_worker_id"] = worker_id
+                            action = CampaignAction(
+                                stage=str(item.get("stage", "statements") or "statements"),
+                                batch_id=batch_id,
+                                labels=tuple(str(label) for label in batch.get("labels", []) or []),
+                                argv=tuple(item.get("command", []) or []),
+                                target_file=str(
+                                    dict(batch.get("last_outcome", {}) or {}).get("target_file", "")
+                                    or ""
+                                ),
+                            )
+                            signum = -exit_code
+                            _record_campaign_interruption(
+                                campaign,
+                                action=action,
+                                worker_id=worker_id,
+                                error=InterruptedError(
+                                    f"child process interrupted by signal {signum}"
+                                ),
+                            )
+                            current = load(campaign)
+                            batch = next(
+                                (b for b in current["batches"] if b["id"] == batch_id),
+                                {},
+                            )
+                            attempts = item_receipts(item, batch)
+                    kind = failure_kind(attempts, exit_code)
+                    item.update(
+                        {
+                            "finished_at": utc(),
+                            "exit_code": exit_code,
+                            "classification": kind,
+                            "new_attempts": attempts,
+                            "lease_after": batch.get("lease"),
+                        }
+                    )
+                    if not attempts:
+                        item["receipt_recovery"] = _missing_receipt_recovery(item, batch, exit_code)
+                    else:
+                        item["receipt_recovery"] = {
+                            "kind": "receipt_present",
+                            "safe_to_retry": False,
+                            "manual_reconciliation_required": False,
+                        }
+                    del active[batch_id]
+                    infra_streak = infra_streak + 1 if kind == "infrastructure" else 0
+                    state["infrastructure_failure_streak"] = infra_streak
+                    event(
+                        "item_finished",
+                        batch_id=batch_id,
+                        classification=kind,
+                        exit_code=exit_code,
+                        infrastructure_failure_streak=infra_streak,
+                        no_infrastructure_fuse=no_infrastructure_fuse,
+                    )
+                    if kind == "auth":
+                        # An auth failure belongs to the credential this child was
+                        # bound to, not to the campaign. Drop the exhausted key and
+                        # carry on with the survivors; only stop once none are left.
+                        # The prune is written back to os.environ because each wave
+                        # rebuilds ``env`` from it, so a wave-local edit would be
+                        # forgotten and the next wave would rebind the dead key.
+                        pruned, audits = prune_exhausted_keys(os.environ, [item])
+                        if pruned is not os.environ:
+                            os.environ.update(pruned)
+                            env.clear()
+                            env.update(pruned)
+                            for audit in audits:
+                                event("key_pruned", **audit)
+                            state["keys_pruned"] = (
+                                list(state.get("keys_pruned", [])) + audits
+                            )
+                        else:
+                            stop("auth")
+                    elif kind in {"quota", "rate_limit", "relay_transient"}:
+                        # quota is hard; rate_limit and relay_transient are in
+                        # SOFT_STOP_REASONS, so stop() pauses and refills instead.
+                        stop(kind)
+                    elif (
+                        state["continuous"]
+                        and kind == "infrastructure"
+                        and item.get("stage") == "proofs"
+                    ):
+                        stop("task_recovery")
+                    elif (
+                        infra_streak >= INFRASTRUCTURE_FUSE_THRESHOLD and not no_infrastructure_fuse
+                    ):
+                        stop("consecutive_infrastructure_failures")
+                    elif infra_streak >= INFRASTRUCTURE_FUSE_THRESHOLD and no_infrastructure_fuse:
+                        event(
+                            "infrastructure_fuse_bypassed",
+                            infrastructure_failure_streak=infra_streak,
+                            threshold=INFRASTRUCTURE_FUSE_THRESHOLD,
+                            no_infrastructure_fuse=True,
+                        )
+                    elif batch.get("lease"):
+                        stop("lease_not_released")
+                if clock() - started >= options.max_wall * 60:
+                    stop("wall_limit")
+                if (run_dir / "STOP").exists() or (
+                    getattr(options, "supervisor_stop_file", None) is not None
+                    and options.supervisor_stop_file.exists()
+                ):
+                    stop("stop_file")
+                if len(seen) >= options.max_items:
+                    stop("item_limit")
+                state["quota"] = quota_status(env)
+                if (
+                    state["quota"].get("halt_reason")
+                    or state["quota"].get("remaining_quota", 0) <= 0
+                ):
+                    stop("quota")
+                if (
+                    state.get("dispatch_paused_until")
+                    and clock() < state["dispatch_paused_until"]
+                ):
+                    # Cooling down after a failure burst; slots refill below once
+                    # the cooldown expires.
+                    pass
+                elif not state["stop_reason"] and len(active) < options.workers:
+                    if state.get("dispatch_pause_reason"):
+                        state.pop("dispatch_pause_reason", None)
+                        state.pop("dispatch_paused_until", None)
+                        event("dispatch_resumed", active=len(active))
+                    if source_hashes() != hashes:
+                        stop("source_changed")
+                    else:
+                        slots = min(options.workers - len(active), options.max_items - len(seen))
+                        choices = preview(
+                            campaign,
+                            project,
+                            seen | set(getattr(options, "excluded_batches", ())),
+                            slots,
+                            stage=getattr(options, "stage", "statements"),
+                            **(
+                                {
+                                    "active_stages": tuple(
+                                        item["stage"] for _, item in active.values()
+                                    )
+                                }
+                                if getattr(options, "stage", "statements") == "mixed"
+                                else {}
+                            ),
+                        )
+                        if not choices and not active:
+                            stop("no_eligible_unseen_items")
+                        for item in choices:
+                            batch_id = item["batch_id"]
+                            seen.add(batch_id)
+                            item.setdefault("stage", getattr(options, "stage", "statements"))
+                            item["command"] = command(campaign, batch_id, stage=item["stage"])
+                            item["started_at"] = utc()
+                            target_path = (
+                                (project / str(item.get("target_file", ""))).resolve()
+                                if item.get("target_file")
+                                else None
+                            )
+                            item["target_path"] = str(target_path) if target_path else ""
+                            if state["continuous"] and item["stage"] == "proofs" and target_path:
+                                item["proof_snapshot"] = capture_proof_snapshot(
+                                    target_path,
+                                    project,
+                                    run_dir / "snapshots" / f"{len(seen):04d}.json",
+                                    batch_id=batch_id,
+                                )
+                            item["watchdog_started"] = clock()
+                            # Record the outcome explicitly rather than leaving
+                            # the key absent. Across 127 runs the key was missing
+                            # from all 1548 items, which is indistinguishable
+                            # from "this item predates the field" -- and it hid
+                            # the fact that the watchdog had never once fired.
+                            item["watchdog_timeout"] = False
+                            item["target_sha256_before"] = (
+                                _file_digest(target_path) if target_path else None
+                            )
+                            item["recovery_source_before"] = recovery_snapshot(item["target_path"])
+                            current_batch = next(
+                                b for b in load(campaign)["batches"] if b["id"] == batch_id
+                            )
+                            item["attempts_before_sha256"] = digest(
+                                json.dumps(
+                                    current_batch.get("attempts", []), sort_keys=True
+                                ).encode()
+                            )
+                            item["log"] = str(
+                                run_dir
+                                / f"{len(seen):03d}-{re.sub(r'[^A-Za-z0-9_.-]', '_', batch_id)}.log"
+                            )
+                            with Path(item["log"]).open("w") as log:
+                                # Bind each child to a deterministic credential
+                                # pool slot.  hdp-run resolves the corresponding
+                                # key from M2F_CODEX_API_KEYS and records only its
+                                # fingerprint in check telemetry.
+                                child_env = dict(env)
+                                child_env["HDP_WORKER_SLOT"] = str(
+                                    (len(seen) - 1) % options.workers
+                                )
+                                process = popen(
+                                    item["command"],
+                                    cwd=project,
+                                    env=child_env,
+                                    stdin=subprocess.DEVNULL,
+                                    stdout=log,
+                                    stderr=subprocess.STDOUT,
+                                    start_new_session=True,
+                                )
+                            item["pid"] = process.pid
+                            state["items"].append(item)
+                            active[batch_id] = (process, item)
+                            event(
+                                "item_started",
+                                batch_id=batch_id,
+                                pid=process.pid,
+                                log=item["log"],
+                                stage=item["stage"],
+                            )
+                if clock() - heartbeat_at >= 30:
+                    event(
+                        "heartbeat",
+                        active=state["active"],
+                        launched=len(seen),
+                        completed=len(seen) - len(active),
+                        stop_reason=state["stop_reason"],
+                        quota=state["quota"],
+                    )
+                    heartbeat_at = clock()
+                if state["stop_reason"] and not active:
+                    break
+                pause(1)
+        except Exception as exc:
+            stop(f"controller_error: {type(exc).__name__}: {exc}")
+            # Do not abandon paid workers or release the supervisor lock while they run.
+            from tools.utilities.process_tree import terminate_process_tree
+
+            for batch_id, (process, item) in list(active.items()):
+                terminate_process_tree(
+                    process.pid,
+                    expected_session_id=process.pid,
+                    term_grace_s=10,
+                    kill_grace_s=2,
+                )
+                code = process.wait(timeout=15)
+                batch = next((b for b in load(campaign)["batches"] if b["id"] == batch_id), {})
+                owner = str(item.get("worker_id", "") or "")
+                if owner and batch.get("lease", {}).get("worker_id") == owner:
+                    _record_campaign_interruption(
+                        campaign,
+                        action=CampaignAction(
+                            stage=item["stage"],
+                            batch_id=batch_id,
+                            labels=tuple(batch.get("labels", [])),
+                            argv=tuple(item["command"]),
+                            target_file=str(item.get("target_file", "")),
+                        ),
+                        worker_id=owner,
+                        error=InterruptedError("controller teardown"),
+                    )
+                    batch = next(
+                        (b for b in load(campaign)["batches"] if b["id"] == batch_id),
+                        {},
+                    )
+                item.update(
+                    exit_code=code,
+                    classification="infrastructure",
+                    finished_at=utc(),
+                    new_attempts=item_receipts(item, batch),
+                    lease_after=batch.get("lease"),
+                )
+                del active[batch_id]
+            state["active"] = {}
+            if not state["continuous"]:
+                raise
+        finally:
+            for sig, handler in old_signals.items():
+                signal.signal(sig, handler)
+            after = campaign.read_bytes()
+            if campaign_snapshots_enabled():
+                (run_dir / "campaign-after.json").write_bytes(after)
+            state.update(
+                {
+                    "finished_at": utc(),
+                    "campaign_after_sha256": digest(after),
+                    "after": summary(json.loads(after)),
+                }
+            )
+            atomic_json_write(run_dir / "run.json", state)
+        reconcile_missing_receipts(state, campaign)
+        event("finished", stop_reason=state["stop_reason"], after=state["after"])
+        return state
+
+
+def recover_continuous_wave(state: dict, campaign: Path, project: Path) -> bool:
+    """Persist every restoration decision before a subsequent wave is admitted."""
+    runtime = recovery_runtime_idle()
+    if state.get("active") and all(
+        runtime.get(k) is True for k in ("checked", "local_idle", "remote_idle")
+    ):
+        # A restarted supervisor can encounter a stale active map after its old
+        # controller died. Do not trust the map alone, or invent a success.
+        for pid in state["active"].values():
+            try:
+                os.kill(int(pid), 0)
+                state["recovery_wait"] = {
+                    "reason": "recorded_child_still_alive",
+                    "pid": pid,
+                }
+                return False
+            except ProcessLookupError:
+                pass
+            except (OSError, ValueError):
+                return False
+        batches = {b["id"]: b for b in load(campaign)["batches"]}
+        for item in state["items"]:
+            if item.get("finished_at"):
+                continue
+            batch = batches.get(item["batch_id"], {})
+            attempts = item_receipts(item, batch)
+            child = item.get("child_result", {})
+            code = 0 if child.get("success") is True and attempts else 1
+            item.update(
+                finished_at=utc(),
+                exit_code=code,
+                new_attempts=attempts,
+                classification=failure_kind(attempts, code),
+                lease_after=batch.get("lease"),
+            )
+        state["active"] = {}
+    ready = reconcile_wave(
+        state,
+        campaign,
+        project=project,
+        runtime=runtime,
+        compile_target=lambda target: compile_restored_target(
+            target, project=project, lake=SOURCE / "remote-bin/lake"
+        ),
+    )
+    if state.get("run_dir"):
+        atomic_json_write(Path(state["run_dir"]) / "run.json", state)
+    return ready
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--execute", action="store_true", help="otherwise print an offline dry plan"
+    )
+    parser.add_argument("--campaign", type=Path, default=PROJECT / "HDP/Environments/campaign.json")
+    parser.add_argument(
+        "--stage",
+        choices=("statements", "proofs", "mixed"),
+        default="statements",
+        help="dispatch statements, proofs, or balanced mixed lanes with shared worker slots",
+    )
+    parser.add_argument("--workers", type=int, choices=(1, 2, 4, 8), default=4)
+    parser.add_argument("--max-items", type=int, default=24)
+    parser.add_argument(
+        "--handoff-limit",
+        type=int,
+        default=4,
+        help="integrate up to this many reviewed statements before dispatch",
+    )
+    parser.add_argument(
+        "--max-wall", type=float, default=180, help="minutes before stopping dispatch"
+    )
+    parser.add_argument(
+        "--no-infrastructure-fuse",
+        action="store_true",
+        help=(
+            "explicitly continue dispatch after consecutive infrastructure failures; "
+            "quota, lease, wall-time and item limits remain enforced"
+        ),
+    )
+    parser.add_argument(
+        "--ignore-unknown-holds",
+        action="store_true",
+        help=(
+            "opt in to success-only quota admission: retain unknown reservations as "
+            "evidence but exclude their holds from remaining capacity"
+        ),
+    )
+    parser.add_argument(
+        "--quota-limit", type=int, default=2_000_000, help="raw provider quota units"
+    )
+    parser.add_argument(
+        "--quote",
+        type=Path,
+        default=CANONICAL_QUOTA_QUOTE,
+        help="verified provider raw-quota quote JSON (default: canonical pricing evidence)",
+    )
+    parser.add_argument(
+        "--quota-budget",
+        type=Path,
+        help="persistent cumulative raw-quota ledger (default: PROJECT/.leanflow/scale-budget.json)",
+    )
+    parser.add_argument(
+        "--import-quota-budget",
+        type=Path,
+        help="offline copy of a halted budget; requires --acknowledge-overrun",
+    )
+    parser.add_argument(
+        "--acknowledge-overrun",
+        action="store_true",
+        help="acknowledge an explicitly imported overrun budget",
+    )
+    parser.add_argument(
+        "--create-isolated-quota-budget",
+        action="store_true",
+        help="offline-create a fresh operator-authorized quota ledger for a new wave",
+    )
+    parser.add_argument(
+        "--isolated-from-quota-budget",
+        type=Path,
+        help="source ledger to record as immutable wave linkage evidence",
+    )
+    parser.add_argument(
+        "--operator-authorization-ref",
+        help="auditable reference authorizing the new raw-quota allocation",
+    )
+    parser.add_argument(
+        "--operator-authorized-at",
+        help="ISO-8601 timestamp (with timezone) of the allocation authorization",
+    )
+    options = parser.parse_args()
+    (
+        options.no_infrastructure_fuse,
+        options.no_infrastructure_fuse_source,
+    ) = no_infrastructure_fuse_setting(options.no_infrastructure_fuse)
+    options.project = PROJECT
+    if options.quota_budget is not None:
+        options.quota_budget = options.quota_budget.expanduser().resolve()
+        if not options.quota_budget.is_relative_to(PROJECT):
+            parser.error("quota budget must remain inside the unique local HDP checkout")
+    if options.import_quota_budget is not None:
+        if options.create_isolated_quota_budget:
+            parser.error(
+                "--import-quota-budget cannot be combined with " "--create-isolated-quota-budget"
+            )
+        options.import_quota_budget = options.import_quota_budget.expanduser().resolve()
+        if not options.import_quota_budget.is_relative_to(PROJECT):
+            parser.error("imported quota budget must remain inside the unique local HDP checkout")
+        if not options.acknowledge_overrun:
+            parser.error("--import-quota-budget requires --acknowledge-overrun")
+        destination = options.quota_budget or (PROJECT / ".leanflow" / "scale-budget.json")
+        if not destination.is_relative_to(PROJECT):
+            parser.error("quota budget must remain inside the unique local HDP checkout")
+        try:
+            imported = import_halted_quota_budget(options.import_quota_budget, destination)
+        except (OSError, RuntimeError, ValueError) as exc:
+            parser.error(str(exc))
+        print(
+            json.dumps(
+                {
+                    "imported": True,
+                    "destination": str(destination),
+                    "quota": {
+                        k: imported.get(k)
+                        for k in (
+                            "limit_quota",
+                            "charges_quota",
+                            "held_quota",
+                            "remaining_quota",
+                        )
+                    },
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 0
+    if options.create_isolated_quota_budget:
+        if options.execute:
+            parser.error("--create-isolated-quota-budget is offline-only; omit --execute")
+        if options.quota_budget is None:
+            parser.error("isolated quota creation requires an explicit --quota-budget destination")
+        if options.isolated_from_quota_budget is None:
+            parser.error("isolated quota creation requires --isolated-from-quota-budget")
+        if not options.operator_authorization_ref:
+            parser.error("isolated quota creation requires --operator-authorization-ref")
+        if not options.operator_authorized_at:
+            parser.error("isolated quota creation requires --operator-authorized-at")
+        source = options.isolated_from_quota_budget.expanduser().resolve()
+        destination = options.quota_budget
+        if not source.is_relative_to(PROJECT):
+            parser.error(
+                "isolated source quota budget must remain inside the unique local HDP checkout"
+            )
+        if not destination.is_relative_to(PROJECT):
+            parser.error(
+                "isolated destination quota budget must remain inside the unique local HDP checkout"
+            )
+        try:
+            _quote_contents, quote_metadata = verified_quote_snapshot(options.quote)
+            isolated = create_isolated_operator_budget(
+                source,
+                destination,
+                limit_quota=options.quota_limit,
+                authorization_ref=options.operator_authorization_ref,
+                authorized_at=options.operator_authorized_at,
+                quote_metadata=quote_metadata,
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            parser.error(str(exc))
+        print(
+            json.dumps(
+                {
+                    "isolated": True,
+                    "destination": str(destination),
+                    "source": str(source),
+                    "operator_authorization": isolated.get("operator_authorization"),
+                    "isolated_from": isolated.get("isolated_from"),
+                    "provider_quota_evidence": isolated.get("provider_quota_evidence"),
+                    "quota": {
+                        key: isolated.get(key)
+                        for key in (
+                            "limit_quota",
+                            "charges_quota",
+                            "held_quota",
+                            "remaining_quota",
+                        )
+                    },
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 0
+    options.campaign = options.campaign.expanduser().resolve()
+    if not options.campaign.is_relative_to(PROJECT):
+        parser.error("campaign must remain inside the unique local HDP checkout")
+    if options.max_items < 1 or options.max_wall <= 0 or options.quota_limit < 1:
+        parser.error("item, wall-time and quota limits must be positive")
+    if options.execute:
+        if not options.quote:
+            parser.error("execution requires a verified --quote and shared request quota guard")
+        result = execute(options)
+        return int(
+            result["stop_reason"]
+            in {"auth", "quota", "rate_limit", "consecutive_infrastructure_failures"}
+        )
+    before = options.campaign.read_bytes()
+    plan = preview(
+        options.campaign,
+        PROJECT,
+        set(),
+        options.max_items,
+        stage=options.stage,
+    )
+    print(
+        json.dumps(
+            {
+                "dry_run": True,
+                "utc": utc(),
+                "workers": options.workers,
+                "stage": options.stage,
+                "lean_slots": 1,
+                "campaign_sha256": digest(before),
+                "items": plan,
+                "max_items": options.max_items,
+                "max_wall_minutes": options.max_wall,
+                "no_infrastructure_fuse": options.no_infrastructure_fuse,
+                "no_infrastructure_fuse_source": options.no_infrastructure_fuse_source,
+                "per_request_timeout_seconds": PER_REQUEST_TIMEOUT_SECONDS,
+                "quota_limit_raw": options.quota_limit,
+                "cost_note": "No API/Lean calls; execution requires verified raw-quota guard.",
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
